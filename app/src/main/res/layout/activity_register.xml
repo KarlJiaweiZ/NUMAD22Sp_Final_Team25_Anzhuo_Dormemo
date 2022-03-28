@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".RegisterActivity">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="0dp"
+        android:layout_marginTop="0dp">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/register_logo"
+                android:layout_width="match_parent"
+                android:layout_height="150dp"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:background="@color/defaultColor"
+                android:scaleType="fitCenter"
+                android:src="@drawable/dormemo_logo_foreground"></ImageView>
+
+            <EditText
+                android:id="@+id/register_email"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/register_logo"
+                android:layout_alignParentStart="true"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginRight="10dp"
+                android:background="@drawable/inputs"
+                android:hint="Email"
+                android:inputType="textEmailAddress"
+                android:padding="10dp"></EditText>
+
+            <EditText
+                android:id="@+id/register_password"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/register_email"
+                android:layout_alignParentStart="true"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginRight="10dp"
+                android:background="@drawable/inputs"
+                android:hint="Password"
+                android:inputType="textPassword"
+                android:padding="10dp"></EditText>
+
+            <EditText
+                android:id="@+id/register_username"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/register_password"
+                android:layout_alignParentStart="true"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginRight="10dp"
+                android:background="@drawable/inputs"
+                android:hint="User name"
+                android:inputType="text"
+                android:padding="10dp"></EditText>
+
+            <EditText
+                android:id="@+id/register_dormname"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/register_username"
+                android:layout_alignParentStart="true"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="15dp"
+                android:layout_marginRight="10dp"
+                android:background="@drawable/inputs"
+                android:hint="Dorm number"
+                android:inputType="text"
+                android:padding="10dp"></EditText>
+
+            <CheckBox
+                android:id="@+id/register_dormleader"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/register_dormname"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="10dp"
+                android:text="Dorm Leader"
+                android:textSize="15dp"></CheckBox>
+
+            <Button
+                android:id="@+id/register_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/register_dormleader"
+                android:text="Register"
+                android:layout_marginTop="15dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:background="@color/defaultColor"
+                android:textColor="@color/white"
+                android:textSize="18dp">
+            </Button>
+
+        </RelativeLayout>
+
+    </ScrollView>
+</RelativeLayout>
