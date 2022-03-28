@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "328904611278",
+    "project_id": "numad22sp-final-dormemo",
+    "storage_bucket": "numad22sp-final-dormemo.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:328904611278:android:aab883737b089b6371079f",
+        "android_client_info": {
+          "package_name": "com.example.numad22sp_final_team25_anzhuo_dormemo"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "328904611278-i161kut2io6p0bh2cu0lgfao9s0ma67r.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC9KN3yBXVHnrB_HzfqVli0xwdFPBAsNjE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "328904611278-i161kut2io6p0bh2cu0lgfao9s0ma67r.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
