@@ -44,7 +44,6 @@ public class MainActivity extends AppCompatActivity {
         //set tabs in viewpager
         myTabLayout = (TabLayout) findViewById(R.id.main_tabs);
         myTabLayout.setupWithViewPager(myViewPager);
-
     }
 
     //set toolbar name

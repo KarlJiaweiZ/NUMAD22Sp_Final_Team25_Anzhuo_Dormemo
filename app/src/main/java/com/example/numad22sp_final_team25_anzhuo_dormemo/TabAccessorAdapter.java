@@ -23,6 +23,9 @@ public class TabAccessorAdapter extends FragmentPagerAdapter {
             case 2:
                 BillFragment billFragment = new BillFragment();
                 return billFragment;
+            case 3:
+                MeFragment meFragment = new MeFragment();
+                return meFragment;
             default:
                 return null;
         }
@@ -30,7 +33,7 @@ public class TabAccessorAdapter extends FragmentPagerAdapter {
 
     @Override
     public int getCount() {
-        return 3;
+        return 4;
     }
 
     @Override
@@ -42,6 +45,8 @@ public class TabAccessorAdapter extends FragmentPagerAdapter {
                 return "Boards";
             case 2:
                 return "Bills";
+            case 3:
+                return "Me";
             default:
                 return null;
         }
