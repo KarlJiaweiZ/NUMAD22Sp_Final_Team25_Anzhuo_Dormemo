@@ -41,7 +41,7 @@
                 android:background="@drawable/inputs"
                 android:hint="Email"
                 android:inputType="textEmailAddress"
-                android:padding="10dp"></EditText>
+                android:padding="15dp"></EditText>
 
             <EditText
                 android:id="@+id/register_password"
@@ -55,7 +55,7 @@
                 android:background="@drawable/inputs"
                 android:hint="Password"
                 android:inputType="textPassword"
-                android:padding="10dp"></EditText>
+                android:padding="15dp"></EditText>
 
             <EditText
                 android:id="@+id/register_username"
@@ -69,7 +69,7 @@
                 android:background="@drawable/inputs"
                 android:hint="User name"
                 android:inputType="text"
-                android:padding="10dp"></EditText>
+                android:padding="15dp"></EditText>
 
             <EditText
                 android:id="@+id/register_dormname"
@@ -83,7 +83,7 @@
                 android:background="@drawable/inputs"
                 android:hint="Dorm number"
                 android:inputType="text"
-                android:padding="10dp"></EditText>
+                android:padding="15dp"></EditText>
 
             <CheckBox
                 android:id="@+id/register_dormleader"
@@ -93,21 +93,30 @@
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="10dp"
                 android:text="Dorm Leader"
-                android:textSize="15dp"></CheckBox>
+                android:textSize="20dp"></CheckBox>
 
             <Button
                 android:id="@+id/register_button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/register_dormleader"
-                android:text="Register"
-                android:layout_marginTop="15dp"
                 android:layout_marginLeft="20dp"
+                android:layout_marginTop="15dp"
                 android:layout_marginRight="20dp"
                 android:background="@color/defaultColor"
+                android:text="Register"
                 android:textColor="@color/white"
-                android:textSize="18dp">
-            </Button>
+                android:textSize="20dp"></Button>
+
+            <ProgressBar
+                android:id="@+id/register_progressbar"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_centerVertical="true"
+                android:layout_centerHorizontal="true"
+                android:visibility="gone"
+                ></ProgressBar>
+
 
         </RelativeLayout>
 
