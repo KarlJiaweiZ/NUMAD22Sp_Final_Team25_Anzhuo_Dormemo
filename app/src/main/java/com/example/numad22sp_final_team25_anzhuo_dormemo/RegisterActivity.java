@@ -21,6 +21,8 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class RegisterActivity extends AppCompatActivity {
 
@@ -29,6 +31,8 @@ public class RegisterActivity extends AppCompatActivity {
     private CheckBox dormLeaderCheck;
 
     private FirebaseAuth firebaseAuth;
+
+    private DatabaseReference databaseReference;
 
     private ProgressBar progressBar;
 
@@ -44,6 +48,7 @@ public class RegisterActivity extends AppCompatActivity {
         setContentView(R.layout.activity_register);
 
         firebaseAuth = FirebaseAuth.getInstance();
+        databaseReference = FirebaseDatabase.getInstance().getReference();
         
         initializeFields();
 
@@ -81,11 +86,6 @@ public class RegisterActivity extends AppCompatActivity {
         progressBar = (ProgressBar) findViewById(R.id.register_progressbar);
     }
 
-    private void sendRegisterToLoginActivity(){
-        Intent loginIntent = new Intent(RegisterActivity.this, LoginActivity.class);
-        startActivity(loginIntent);
-    }
-
     private void createNewAccount(){
         String email = userEmail.getText().toString();
         String password = userPassword.getText().toString();
@@ -110,7 +110,9 @@ public class RegisterActivity extends AppCompatActivity {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
                             if(task.isSuccessful()){
-                                sendRegisterToLoginActivity();
+                                String currentUserID = firebaseAuth.getCurrentUser().getUid();
+                                databaseReference.child("Users").child(currentUserID).setValue(password);
+                                sendRegisterToMainActivity();
                                 Toast.makeText(RegisterActivity.this,"Account created successful", Toast.LENGTH_SHORT).show();
                                 progressBar.setVisibility(View.GONE);
                             }
@@ -122,5 +124,17 @@ public class RegisterActivity extends AppCompatActivity {
                         }
                     });
         }
+    }
+
+    private void sendRegisterToLoginActivity(){
+        Intent loginIntent = new Intent(RegisterActivity.this, LoginActivity.class);
+        startActivity(loginIntent);
+    }
+
+    private void sendRegisterToMainActivity(){
+        Intent mainIntent = new Intent(RegisterActivity.this, MainActivity.class);
+        mainIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(mainIntent);
+        finish();
     }
 }
