@@ -64,17 +64,18 @@ public class MainActivity extends AppCompatActivity {
         if(currentUser == null){
             SendUserToLoginActivity();
         }
-        /*else{
+        else{
             verifyUserExistance();
-        }*/
+        }
     }
 
     private void verifyUserExistance() {
         String currentUserID = firebaseAuth.getCurrentUser().getUid();
-        databaseReference.child(currentUserID).addValueEventListener(new ValueEventListener() {
+        /*
+        databaseReference.child("Users").child(currentUserID).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if(snapshot.child("name").exists()){
+                if(snapshot.child("Username").exists()){
                     Toast.makeText(MainActivity.this,"Welcome back", Toast.LENGTH_SHORT).show();
                 }
                 else{
@@ -87,6 +88,7 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+         */
 
     }
 

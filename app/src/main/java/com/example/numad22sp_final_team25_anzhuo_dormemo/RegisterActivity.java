@@ -21,8 +21,13 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.Iterator;
 
 public class RegisterActivity extends AppCompatActivity {
 
@@ -69,7 +74,8 @@ public class RegisterActivity extends AppCompatActivity {
         registerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                createNewAccount();
+                //createNewAccount();
+                checkInput();
                 sendRegisterToLoginActivity();
             }
         });
@@ -111,7 +117,11 @@ public class RegisterActivity extends AppCompatActivity {
                         public void onComplete(@NonNull Task<AuthResult> task) {
                             if(task.isSuccessful()){
                                 String currentUserID = firebaseAuth.getCurrentUser().getUid();
-                                databaseReference.child("Users").child(currentUserID).setValue(password);
+                                databaseReference.child("Users").child(currentUserID).child("Email").setValue(email);
+                                databaseReference.child("Users").child(currentUserID).child("Password").setValue(password);
+                                databaseReference.child("Users").child(currentUserID).child("Username").setValue(username);
+                                databaseReference.child("Users").child(currentUserID).child("DormName").setValue(dormname);
+                                databaseReference.child("Dorms").child("Dorm name").setValue(dormname);
                                 sendRegisterToMainActivity();
                                 Toast.makeText(RegisterActivity.this,"Account created successful", Toast.LENGTH_SHORT).show();
                                 progressBar.setVisibility(View.GONE);
@@ -124,6 +134,35 @@ public class RegisterActivity extends AppCompatActivity {
                         }
                     });
         }
+    }
+
+    private void checkInput(){
+        DatabaseReference datacheck = databaseReference.child("Dorms").child("Dorm name");
+        datacheck.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if(!snapshot.exists()){
+                    createNewAccount();
+                }
+                else{
+                    Iterator<DataSnapshot> dataSnapshots = snapshot.getChildren().iterator();
+                    while (dataSnapshots.hasNext()){
+                        String dormname = dormName.getText().toString();
+                        DataSnapshot snapshotchild = dataSnapshots.next();
+                        String temp_dormname = snapshotchild.toString();
+                        if(temp_dormname == dormname){
+                            Toast.makeText(RegisterActivity.this,"Duplicate dormname",Toast.LENGTH_SHORT).show();
+                        }else {
+                            createNewAccount();
+                        }
+                    }
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
     }
 
     private void sendRegisterToLoginActivity(){
