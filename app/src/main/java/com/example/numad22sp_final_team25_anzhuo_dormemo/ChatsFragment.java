@@ -8,6 +8,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,10 +23,12 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.text.SimpleDateFormat;
@@ -48,7 +51,7 @@ public class ChatsFragment extends Fragment {
 
     private FirebaseUser currentUser;
     private FirebaseAuth firebaseAuth;
-    private DatabaseReference usersRef, groupRef, groupMessageKeyRef;
+    private DatabaseReference usersRef, dormRef, groupMessageKeyRef;
 
 
     public ChatsFragment() {
@@ -58,26 +61,11 @@ public class ChatsFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        firebaseAuth = FirebaseAuth.getInstance();
-        currentUser = firebaseAuth.getCurrentUser();
-        if(currentUser == null){
-            SendUserToLoginActivity();
-        }
-        usersRef = FirebaseDatabase.getInstance().getReference().child("Users");
-        //Toast.makeText(getActivity(),currentDormName,Toast.LENGTH_SHORT).show();
-        currentUserID = firebaseAuth.getCurrentUser().getUid();
-        //groupRef = FirebaseDatabase.getInstance().getReference().child("Dorms").child(currentDormName);
-
-
-        getUserInfo();
-
     }
 
     @Override
     public void onStart() {
         super.onStart();
-
     }
 
     private void SendUserToLoginActivity() {
@@ -90,6 +78,38 @@ public class ChatsFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         chatsFragmentView = inflater.inflate(R.layout.fragment_chats, container, false);
+
+
+        firebaseAuth = FirebaseAuth.getInstance();
+        currentUser = firebaseAuth.getCurrentUser();
+        if(currentUser == null){
+            SendUserToLoginActivity();
+        }
+        usersRef = FirebaseDatabase.getInstance().getReference().child("Users");
+        dormRef = FirebaseDatabase.getInstance().getReference().child("Dorms");
+
+        usersRef.child(currentUser.getUid()).child("DormName").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(dataSnapshot.exists()){
+                    currentDormName = dataSnapshot.getValue(String.class);
+                    Toast.makeText(getActivity(),"current"+currentDormName,Toast.LENGTH_SHORT).show();
+                }
+                else {
+                    Log.d("ChatsFragment", "currentDormName is null");
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Log.d("ChatsFragment", "currentDormName is null");
+            }
+        });
+        //groupChatTextDisplay.setText(currentDormName);
+        currentUserID = firebaseAuth.getCurrentUser().getUid();
+        dormRef = FirebaseDatabase.getInstance().getReference().child("Dorms");
+
+
+        getUserInfo();
 
         initializeFields();
         sendMessageButton.setOnClickListener(new View.OnClickListener() {
@@ -129,7 +149,7 @@ public class ChatsFragment extends Fragment {
 
     private void saveMessagesToDatabase() {
         String message = userSendMessage.getText().toString();
-        String messageKey = groupRef.push().getKey();
+        String messageKey = dormRef.push().getKey();
         if(TextUtils.isEmpty(message)){
             Toast.makeText(getActivity(),"Please write message", Toast.LENGTH_SHORT).show();
         }
@@ -145,8 +165,8 @@ public class ChatsFragment extends Fragment {
             currentTime = timeFormat.format(calendarTime.getTime());
 
             HashMap<String, Object> groupMessageKey = new HashMap<>();
-            groupRef.updateChildren(groupMessageKey);
-            groupMessageKeyRef = groupRef.child(messageKey);
+            dormRef.updateChildren(groupMessageKey);
+            groupMessageKeyRef = dormRef.child(messageKey);
 
             HashMap<String, Object> messageInfoMap = new HashMap<>();
             messageInfoMap.put("User name", currentUserName);

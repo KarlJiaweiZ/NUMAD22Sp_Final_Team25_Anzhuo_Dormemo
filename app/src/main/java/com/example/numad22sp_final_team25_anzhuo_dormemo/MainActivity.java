@@ -11,6 +11,8 @@ import android.widget.TableLayout;
 import android.widget.Toast;
 import android.widget.Toolbar;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -26,6 +28,7 @@ public class MainActivity extends AppCompatActivity {
     private ViewPager myViewPager;
     private TabLayout myTabLayout;
     private TabAccessorAdapter mytabAccessorAdapter;
+    private String dormName;
 
     private FirebaseUser currentUser;
     private FirebaseAuth firebaseAuth;
@@ -41,7 +44,16 @@ public class MainActivity extends AppCompatActivity {
 
         //set the tool bar in Dormemo
         myToolbar = (Toolbar) findViewById(R.id.main_page_toolbar);
-        setSupportActionBar(myToolbar);
+        databaseReference = FirebaseDatabase.getInstance().getReference();
+        databaseReference.child("Users").child(currentUser.getUid()).child("DormName").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                if (task.isSuccessful()) {
+                    dormName = task.getResult().getValue().toString();
+                    setSupportActionBar(myToolbar);
+                }
+            }
+        });
 
         //set viewpager, able to switch
         myViewPager = (ViewPager) findViewById(R.id.main_tabs_pager);
@@ -55,7 +67,7 @@ public class MainActivity extends AppCompatActivity {
 
     //set toolbar name
     private void setSupportActionBar(@NonNull Toolbar toolbar) {
-        toolbar.setTitle("Dormemo");
+        toolbar.setTitle("Dormemo - " + dormName);
     }
 
     @Override
