@@ -45,15 +45,6 @@ public class MainActivity extends AppCompatActivity {
         //set the tool bar in Dormemo
         myToolbar = (Toolbar) findViewById(R.id.main_page_toolbar);
         databaseReference = FirebaseDatabase.getInstance().getReference();
-        databaseReference.child("Users").child(currentUser.getUid()).child("DormName").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DataSnapshot> task) {
-                if (task.isSuccessful()) {
-                    dormName = task.getResult().getValue().toString();
-                    setSupportActionBar(myToolbar);
-                }
-            }
-        });
 
         //set viewpager, able to switch
         myViewPager = (ViewPager) findViewById(R.id.main_tabs_pager);
@@ -77,8 +68,18 @@ public class MainActivity extends AppCompatActivity {
             SendUserToLoginActivity();
         }
         else{
+            databaseReference.child("Users").child(currentUser.getUid()).child("DormName").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<DataSnapshot> task) {
+                    if (task.isSuccessful()) {
+                        dormName = task.getResult().getValue().toString();
+                        setSupportActionBar(myToolbar);
+                    }
+                }
+            });
             verifyUserExistance();
         }
+
     }
 
     private void verifyUserExistance() {
