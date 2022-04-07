@@ -34,6 +34,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.Iterator;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -66,6 +67,36 @@ public class ChatsFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
+        dormRef.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+                if (snapshot.exists()) {
+                    displayMessage(snapshot);
+                }
+            }
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+                if (snapshot.exists()) {
+                    displayMessage(snapshot);
+                }
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot snapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
     }
 
     private void SendUserToLoginActivity() {
@@ -118,11 +149,14 @@ public class ChatsFragment extends Fragment {
                 saveMessagesToDatabase();
 
                 userSendMessage.setText("");
+
+                scrollView.fullScroll(ScrollView.FOCUS_DOWN);
             }
         });
 
         return chatsFragmentView;
     }
+
 
     private void initializeFields() {
         userSendMessage = (EditText) chatsFragmentView.findViewById(R.id.chat_input_message);
@@ -174,6 +208,18 @@ public class ChatsFragment extends Fragment {
             messageInfoMap.put("Date", currentDate);
             messageInfoMap.put("Time", currentTime);
             groupMessageKeyRef.updateChildren(messageInfoMap);
+        }
+    }
+
+    private void displayMessage(DataSnapshot dataSnapshot) {
+        Iterator iterator = dataSnapshot.getChildren().iterator();
+        while(iterator.hasNext()){
+            String chatDate = (String) ((DataSnapshot)iterator.next()).getValue();
+            String chatMessage = (String) ((DataSnapshot)iterator.next()).getValue();
+            String chatTime = (String) ((DataSnapshot)iterator.next()).getValue();
+            String chatUserName = (String) ((DataSnapshot)iterator.next()).getValue();
+
+            groupChatTextDisplay.append(chatUserName + " :\n" + chatMessage + "\n" + chatTime + "\n" + chatDate + "\n\n");
         }
     }
 }
