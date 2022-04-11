@@ -1,12 +1,26 @@
 package com.example.numad22sp_final_team25_anzhuo_dormemo;
 
+import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -19,6 +33,21 @@ public class MeFragment extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
+
+    private View meFragmentView;
+    private String currentUserID, currentUserName, currentDormName;
+
+    private TextView userStatusTV;
+    private TextView currentUserNameTV;
+    private Button changePasswordButton;
+    private Button changeDormNameButton;
+    private Button logOutButton;
+
+    private FirebaseUser currentUser;
+    private FirebaseAuth firebaseAuth;
+    private DatabaseReference usersRef, dormRef, groupMessageKeyRef;
+
+
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -55,10 +84,65 @@ public class MeFragment extends Fragment {
         }
     }
 
+    private void SendUserToLoginActivity() {
+        Intent loginIntent = new Intent(getActivity(), LoginActivity.class);
+        startActivity(loginIntent);
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_me, container, false);
+        meFragmentView =  inflater.inflate(R.layout.fragment_me, container, false);
+
+        firebaseAuth = FirebaseAuth.getInstance();
+        currentUser = firebaseAuth.getCurrentUser();
+        if(currentUser == null){
+            SendUserToLoginActivity();
+        }
+        usersRef = FirebaseDatabase.getInstance().getReference().child("Users");
+        dormRef = FirebaseDatabase.getInstance().getReference().child("Dorms");
+
+        if(currentUser == null){
+            SendUserToLoginActivity();
+        }
+
+        initializeFields();
+        retrieveUserInfo();
+        return meFragmentView;
+    }
+
+
+
+    private void initializeFields() {
+        currentUserNameTV = (TextView) meFragmentView.findViewById(R.id.tvUserName);
+        logOutButton = (Button) meFragmentView.findViewById(R.id.buttonLogOut);
+        logOutButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                firebaseAuth.signOut();
+                SendUserToLoginActivity();
+            }
+        });
+    }
+
+    private void retrieveUserInfo() {
+        usersRef.child(currentUser.getUid()).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if(snapshot.exists() && snapshot.hasChild("Username")){
+                    String retrieveUsername = snapshot.child("Username").getValue().toString();
+                    currentUserNameTV.setText(retrieveUsername);
+                } else {
+                    Log.d("MeFragment", "retrieveUserInfo: userRef wrong!");
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Log.d("MeFragment", "retrieveUserInfo: something wrong!");
+            }
+        });
+
     }
 }

@@ -12,20 +12,21 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@id/chat_linear_layout">
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
+
             <TextView
                 android:id="@+id/chat_text_display"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="2dp"
                 android:padding="10dp"
                 android:textAllCaps="false"
-                android:textSize="10sp"
                 android:textColor="@color/black"
-                android:layout_marginStart="2dp"
-                ></TextView>
+                android:textSize="10sp"></TextView>
         </LinearLayout>
     </ScrollView>
 
