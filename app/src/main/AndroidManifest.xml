@@ -12,12 +12,6 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.NUMAD22Sp_Final_Team25_Anzhuo_Dormemo">
         <activity
-            android:name=".ChatActivity"
-            android:exported="false" />
-        <activity
-            android:name=".MeActivity"
-            android:exported="false" />
-        <activity
             android:name=".RegisterActivity"
             android:exported="false" />
         <activity
