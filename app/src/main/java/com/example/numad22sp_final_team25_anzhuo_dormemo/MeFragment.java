@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -21,6 +22,9 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.squareup.picasso.Picasso;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -33,10 +37,12 @@ public class MeFragment extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
+    private static final int PICK_IMAGE_REQUEST = 1;
 
     private View meFragmentView;
     private String currentUserID, currentUserName, currentDormName;
 
+    private ImageView userPicIV;
     private TextView userStatusTV;
     private TextView currentUserNameTV;
     private Button changePasswordButton;
@@ -46,6 +52,8 @@ public class MeFragment extends Fragment {
     private FirebaseUser currentUser;
     private FirebaseAuth firebaseAuth;
     private DatabaseReference usersRef, dormRef, groupMessageKeyRef;
+    private StorageReference storageReference;
+    //private DatabaseReference getImage;
 
 
 
@@ -97,11 +105,16 @@ public class MeFragment extends Fragment {
 
         firebaseAuth = FirebaseAuth.getInstance();
         currentUser = firebaseAuth.getCurrentUser();
+        //storageReference = FirebaseStorage.getInstance().getReference("images/"+ "default_avatar.png");
+
+
         if(currentUser == null){
             SendUserToLoginActivity();
         }
         usersRef = FirebaseDatabase.getInstance().getReference().child("Users");
         dormRef = FirebaseDatabase.getInstance().getReference().child("Dorms");
+
+
 
         if(currentUser == null){
             SendUserToLoginActivity();
@@ -112,9 +125,14 @@ public class MeFragment extends Fragment {
         return meFragmentView;
     }
 
-
-
     private void initializeFields() {
+        userPicIV = (ImageView) meFragmentView.findViewById(R.id.ivUserPic);
+        userPicIV.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
         currentUserNameTV = (TextView) meFragmentView.findViewById(R.id.tvUserName);
         logOutButton = (Button) meFragmentView.findViewById(R.id.buttonLogOut);
         logOutButton.setOnClickListener(new View.OnClickListener() {
@@ -133,6 +151,8 @@ public class MeFragment extends Fragment {
                 if(snapshot.exists() && snapshot.hasChild("Username")){
                     String retrieveUsername = snapshot.child("Username").getValue().toString();
                     currentUserNameTV.setText(retrieveUsername);
+                    String imageUri = snapshot.child("UserPic").getValue().toString();
+                    Picasso.get().load(imageUri).into(userPicIV);
                 } else {
                     Log.d("MeFragment", "retrieveUserInfo: userRef wrong!");
                 }
@@ -140,9 +160,11 @@ public class MeFragment extends Fragment {
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                Log.d("MeFragment", "retrieveUserInfo: something wrong!");
+                Log.d("MeFragment", "retrieveUserInfo: userRef canceled wrong!");
             }
         });
 
+
     }
+
 }
