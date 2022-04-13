@@ -121,7 +121,7 @@ public class RegisterActivity extends AppCompatActivity {
                                 databaseReference.child("Users").child(currentUserID).child("Password").setValue(password);
                                 databaseReference.child("Users").child(currentUserID).child("Username").setValue(username);
                                 databaseReference.child("Users").child(currentUserID).child("DormName").setValue(dormname);
-                                databaseReference.child("Dorms").child("Dorm name").setValue(dormname);
+                                databaseReference.child("Dorms").child(dormname).child("Leader").setValue(username);
                                 sendRegisterToMainActivity();
                                 Toast.makeText(RegisterActivity.this,"Account created successful", Toast.LENGTH_SHORT).show();
                                 progressBar.setVisibility(View.GONE);
@@ -137,7 +137,7 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     private void checkInput(){
-        DatabaseReference datacheck = databaseReference.child("Dorms").child("Dorm name");
+        DatabaseReference datacheck = databaseReference.child("Dorms");
         datacheck.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
