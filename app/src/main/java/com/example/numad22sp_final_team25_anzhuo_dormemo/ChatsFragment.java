@@ -67,36 +67,6 @@ public class ChatsFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        dormRef.addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-                if (snapshot.exists()) {
-                    displayMessage(snapshot);
-                }
-            }
-
-            @Override
-            public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-                if (snapshot.exists()) {
-                    displayMessage(snapshot);
-                }
-            }
-
-            @Override
-            public void onChildRemoved(@NonNull DataSnapshot snapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
     }
 
     private void SendUserToLoginActivity() {
@@ -125,6 +95,36 @@ public class ChatsFragment extends Fragment {
                 if(dataSnapshot.exists()){
                     currentDormName = dataSnapshot.getValue(String.class);
                     Toast.makeText(getActivity(),"current"+currentDormName,Toast.LENGTH_SHORT).show();
+                    dormRef.child(currentDormName).child("Chats").addChildEventListener(new ChildEventListener() {
+                        @Override
+                        public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+                            if (snapshot.exists()) {
+                                displayMessage(snapshot);
+                            }
+                        }
+
+                        @Override
+                        public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+                            if (snapshot.exists()) {
+                                displayMessage(snapshot);
+                            }
+                        }
+
+                        @Override
+                        public void onChildRemoved(@NonNull DataSnapshot snapshot) {
+
+                        }
+
+                        @Override
+                        public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
+                        }
+                    });
                 }
                 else {
                     Log.d("ChatsFragment", "currentDormName is null");
@@ -135,10 +135,7 @@ public class ChatsFragment extends Fragment {
                 Log.d("ChatsFragment", "currentDormName is null");
             }
         });
-        //groupChatTextDisplay.setText(currentDormName);
         currentUserID = firebaseAuth.getCurrentUser().getUid();
-        dormRef = FirebaseDatabase.getInstance().getReference().child("Dorms");
-
 
         getUserInfo();
 
@@ -147,7 +144,6 @@ public class ChatsFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 saveMessagesToDatabase();
-
                 userSendMessage.setText("");
 
                 scrollView.fullScroll(ScrollView.FOCUS_DOWN);
@@ -183,7 +179,8 @@ public class ChatsFragment extends Fragment {
 
     private void saveMessagesToDatabase() {
         String message = userSendMessage.getText().toString();
-        String messageKey = dormRef.push().getKey();
+        DatabaseReference dormMessageRef = dormRef.child(currentDormName).child("Chats");
+        String messageKey = dormMessageRef.push().getKey();
         if(TextUtils.isEmpty(message)){
             Toast.makeText(getActivity(),"Please write message", Toast.LENGTH_SHORT).show();
         }
@@ -199,8 +196,8 @@ public class ChatsFragment extends Fragment {
             currentTime = timeFormat.format(calendarTime.getTime());
 
             HashMap<String, Object> groupMessageKey = new HashMap<>();
-            dormRef.updateChildren(groupMessageKey);
-            groupMessageKeyRef = dormRef.child(messageKey);
+            dormMessageRef.updateChildren(groupMessageKey);
+            groupMessageKeyRef = dormMessageRef.child(messageKey);
 
             HashMap<String, Object> messageInfoMap = new HashMap<>();
             messageInfoMap.put("User name", currentUserName);
