@@ -43,6 +43,7 @@ public class RegisterActivity extends AppCompatActivity {
     private ProgressBar progressBar;
 
     private boolean registerStatus;
+    private boolean hasDorm;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,27 +61,26 @@ public class RegisterActivity extends AppCompatActivity {
 
         initializeFields();
 
-        dormLeaderCheck.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                if(compoundButton.isChecked()){
-                    dormName.setBackgroundColor(Color.GRAY);
-                    dormName.setEnabled(false);
-                }
-                else {
-                    dormName.setBackground(getResources().getDrawable(R.drawable.inputs));
-                    dormName.setEnabled(true);
-                }
-            }
-        });
+//        dormLeaderCheck.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+//            @Override
+//            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+//                if(compoundButton.isChecked()){
+//                    dormName.setBackgroundColor(Color.GRAY);
+//                    dormName.setEnabled(false);
+//                }
+//                else {
+//                    dormName.setBackground(getResources().getDrawable(R.drawable.inputs));
+//                    dormName.setEnabled(true);
+//                }
+//            }
+//        });
 
         registerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 //createNewAccount();
                 checkInput();
-                if(registerStatus)
-                    sendRegisterToLoginActivity();
+                if(registerStatus) sendRegisterToLoginActivity();
             }
         });
     }
@@ -110,8 +110,8 @@ public class RegisterActivity extends AppCompatActivity {
         if(TextUtils.isEmpty(username)){
             Toast.makeText(this, "Please enter username",Toast.LENGTH_SHORT).show();
         }
-        if(TextUtils.isEmpty(dormname) && !dormLeaderCheck.isChecked()){
-            Toast.makeText(this, "Please enter dorm name or be the leader",Toast.LENGTH_SHORT).show();
+        if(TextUtils.isEmpty(dormname)){
+            Toast.makeText(this, "Please enter dorm name",Toast.LENGTH_SHORT).show();
         }
         else {
             progressBar.setVisibility(View.VISIBLE);
@@ -122,15 +122,18 @@ public class RegisterActivity extends AppCompatActivity {
                             if(task.isSuccessful()){
                                 registerStatus = true;
                                 String currentUserID = firebaseAuth.getCurrentUser().getUid();
+                                //User Part
                                 databaseReference.child("Users").child(currentUserID).child("Email").setValue(email);
                                 databaseReference.child("Users").child(currentUserID).child("Password").setValue(password);
                                 databaseReference.child("Users").child(currentUserID).child("Username").setValue(username);
                                 databaseReference.child("Users").child(currentUserID).child("DormName").setValue(dormname);
+                                //Dorm Part
                                 if(dormLeaderCheck.isChecked()){
-                                    databaseReference.child("Dorms").child(dormname).child("Members").child("Leader").child(currentUserID).setValue(username);
-                                }
-                                else{
-                                    databaseReference.child("Dorms").child(dormname).child("Members").child("OtherMembers").child(currentUserID).setValue(username);
+                                    //to be the leader
+                                    databaseReference.child("Dorms").child(dormname).child("Members").child("Leader").setValue(currentUserID);
+                                }else{
+                                    //to be a member
+                                    databaseReference.child("Dorms").child(dormname).child("Members").child(currentUserID).setValue(username);
                                 }
                                 sendRegisterToMainActivity();
                                 Toast.makeText(RegisterActivity.this,"Account created successful", Toast.LENGTH_SHORT).show();
@@ -139,9 +142,7 @@ public class RegisterActivity extends AppCompatActivity {
                             else {
                                 String message = task.getException().toString();
                                 Toast.makeText(RegisterActivity.this, message.substring(message.indexOf("[")), Toast.LENGTH_LONG).show();
-
-                                Log.e("Register failed", message);
-
+                                Log.e("Rigister failed", message);
                                 progressBar.setVisibility(View.GONE);
                             }
                         }
@@ -158,16 +159,26 @@ public class RegisterActivity extends AppCompatActivity {
                     createNewAccount();
                 }
                 else{
-                    Iterator<DataSnapshot> dataSnapshots = snapshot.getChildren().iterator();
-                    while (dataSnapshots.hasNext()){
+                    for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                         String dormname = dormName.getText().toString();
-                        DataSnapshot snapshotchild = dataSnapshots.next();
-                        String temp_dormname = snapshotchild.toString();
-                        if(temp_dormname == dormname){
-                            Toast.makeText(RegisterActivity.this,"Duplicate dormname",Toast.LENGTH_SHORT).show();
-                        }else {
-                            createNewAccount();
+                        String temp_dormname = dataSnapshot.getKey().toString();
+                        if (temp_dormname.equals(dormname)) {
+                            hasDorm = true;
                         }
+                        Log.e("Dorm:", temp_dormname);
+                    }
+                    if(dormLeaderCheck.isChecked() && hasDorm){
+                        //notice user that this dorm name is taken
+                        Toast.makeText(RegisterActivity.this, "This dorm name has been token, please rename.", Toast.LENGTH_LONG).show();
+                    }else if(dormLeaderCheck.isChecked() && !hasDorm){
+                        //create account as dorm leader
+                        createNewAccount();
+                    }else if(!dormLeaderCheck.isChecked() && hasDorm){
+                        //create account as dorm member
+                        createNewAccount();
+                    }else{
+                        //notice user this dorm does not exist
+                        Toast.makeText(RegisterActivity.this, "Dorm does not exist, please enter a valid name or be the leader.", Toast.LENGTH_LONG).show();
                     }
                 }
             }
