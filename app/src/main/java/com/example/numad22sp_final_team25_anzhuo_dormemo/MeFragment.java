@@ -15,6 +15,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthCredential;
+import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -28,8 +32,6 @@ import com.squareup.picasso.Picasso;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link MeFragment#newInstance} factory method to
- * create an instance of this fragment.
  */
 public class MeFragment extends Fragment {
 
@@ -40,7 +42,7 @@ public class MeFragment extends Fragment {
     private static final int PICK_IMAGE_REQUEST = 1;
 
     private View meFragmentView;
-    private String currentUserID, currentUserName, currentDormName;
+    private String currentUserID, currentUserName, currentDormName, currentEmail, currentPass, newPass;
 
     private ImageView userPicIV;
     private TextView userStatusTV;
@@ -56,40 +58,13 @@ public class MeFragment extends Fragment {
     //private DatabaseReference getImage;
 
 
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
     public MeFragment() {
         // Required empty public constructor
-    }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment MeFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static MeFragment newInstance(String param1, String param2) {
-        MeFragment fragment = new MeFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
     }
 
     private void SendUserToLoginActivity() {
@@ -114,8 +89,6 @@ public class MeFragment extends Fragment {
         usersRef = FirebaseDatabase.getInstance().getReference().child("Users");
         dormRef = FirebaseDatabase.getInstance().getReference().child("Dorms");
 
-
-
         if(currentUser == null){
             SendUserToLoginActivity();
         }
@@ -134,6 +107,14 @@ public class MeFragment extends Fragment {
             }
         });
         currentUserNameTV = (TextView) meFragmentView.findViewById(R.id.tvUserName);
+        changePasswordButton = (Button) meFragmentView.findViewById(R.id.buttonChangePassword);
+        changePasswordButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                newPass = "123456";
+                updatePassword();
+            }
+        });
         logOutButton = (Button) meFragmentView.findViewById(R.id.buttonLogOut);
         logOutButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -149,6 +130,8 @@ public class MeFragment extends Fragment {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if(snapshot.exists() && snapshot.hasChild("Username")){
+                    currentEmail = snapshot.child("Email").getValue().toString();
+                    currentPass = snapshot.child("Password").getValue().toString();
                     String retrieveUsername = snapshot.child("Username").getValue().toString();
                     currentUserNameTV.setText(retrieveUsername);
                     String imageUri = snapshot.child("UserPic").getValue().toString();
@@ -164,7 +147,32 @@ public class MeFragment extends Fragment {
             }
         });
 
-
     }
 
+    private void updatePassword() {
+        Toast.makeText(getActivity(), "before", Toast.LENGTH_SHORT);
+        String email = currentUser.getEmail();
+        Toast.makeText(getActivity(), "1232121414" + email, Toast.LENGTH_SHORT);
+        AuthCredential credential = EmailAuthProvider.getCredential(email, currentPass);
+        // Prompt the user to re-provide their sign-in credentials
+        currentUser.reauthenticate(credential).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if (task.isSuccessful()) {
+                    currentUser.updatePassword(newPass).addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            if (task.isSuccessful()) {
+                                Log.d("MeFragment", "Password updated");
+                            } else {
+                                Log.d("MeFragment", "Error password not updated");
+                            }
+                        }
+                    });
+                } else {
+                    Log.d("MeFragment", "Error auth failed");
+                }
+            }
+        });
+    }
 }
