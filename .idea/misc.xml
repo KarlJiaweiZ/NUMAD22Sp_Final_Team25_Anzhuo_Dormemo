@@ -3,21 +3,17 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
-        <entry key="..\:/Users/93934/AndroidStudioProjects/NUMAD22Sp_Team25/app/src/main/res/layout/activity_chat.xml" value="0.20108695652173914" />
-        <entry key="..\:/Users/93934/AndroidStudioProjects/NUMAD22Sp_Team25/app/src/main/res/layout/activity_homepage.xml" value="0.22333333333333336" />
-        <entry key="..\:/Users/93934/AndroidStudioProjects/NUMAD22Sp_Team25/app/src/main/res/layout/activity_login.xml" value="0.1983695652173913" />
-        <entry key="..\:/Users/93934/AndroidStudioProjects/NUMAD22Sp_Team25/app/src/main/res/layout/activity_main.xml" value="0.17617753623188406" />
-        <entry key="..\:/Users/93934/AndroidStudioProjects/NUMAD22Sp_Team25/app/src/main/res/layout/activity_me.xml" value="0.20108695652173914" />
-        <entry key="..\:/Users/93934/AndroidStudioProjects/NUMAD22Sp_Team25/app/src/main/res/layout/activity_receive_notification.xml" value="0.20108695652173914" />
-        <entry key="..\:/Users/93934/AndroidStudioProjects/NUMAD22Sp_Team25/app/src/main/res/layout/activity_register.xml" value="0.1983695652173913" />
-        <entry key="..\:/Users/93934/AndroidStudioProjects/NUMAD22Sp_Team25/app/src/main/res/layout/acvitity_login.xml" value="0.16847826086956522" />
-        <entry key="..\:/Users/93934/AndroidStudioProjects/NUMAD22Sp_Team25/app/src/main/res/layout/fragment_me.xml" value="0.2" />
-        <entry key="..\:/Users/93934/AndroidStudioProjects/NUMAD22Sp_Team25/app/src/main/res/layout/layout_test.xml" value="0.23777173913043478" />
-        <entry key="..\:/Users/93934/AndroidStudioProjects/NUMAD22Sp_Team25/app/src/main/res/layout/spinner_card.xml" value="0.16847826086956522" />
-        <entry key="..\:/Users/93934/AndroidStudioProjects/NUMAD22Sp_Team25/app/src/main/res/layout/spinner_manager.xml" value="0.16847826086956522" />
-        <entry key="..\:/Users/93934/AndroidStudioProjects/NUMAD22Sp_Team25/app/src/main/res/layout/sticker_records_card.xml" value="0.22333333333333336" />
-        <entry key="..\:/Users/93934/AndroidStudioProjects/NUMAD22Sp_Team25/app/src/main/res/layout/sticker_window.xml" value="0.16847826086956522" />
-        <entry key="..\:/Users/93934/AndroidStudioProjects/NUMAD22Sp_Team25/app/src/main/res/mipmap-anydpi-v26/dormemo_logo_round.xml" value="0.2115" />
+        <entry key="..\:/Downloads/NUMAD22Sp_Final_Team25_Anzhuo_Dormemo/app/src/main/res/layout/activity_main.xml" value="0.3619791666666667" />
+        <entry key="..\:/Downloads/NUMAD22Sp_Final_Team25_Anzhuo_Dormemo/app/src/main/res/layout/app_bar_layout.xml" value="0.3619791666666667" />
+        <entry key="..\:/Users/LZS/AndroidStudioProjects/NUMAD22Sp_Final_Team25_Anzhuo_Dormemo/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.279" />
+        <entry key="..\:/Users/LZS/AndroidStudioProjects/NUMAD22Sp_Final_Team25_Anzhuo_Dormemo/app/src/main/res/drawable/buttons.xml" value="0.279" />
+        <entry key="..\:/Users/LZS/AndroidStudioProjects/NUMAD22Sp_Final_Team25_Anzhuo_Dormemo/app/src/main/res/drawable/dormemo_logo_foreground.xml" value="0.279" />
+        <entry key="..\:/Users/LZS/AndroidStudioProjects/NUMAD22Sp_Final_Team25_Anzhuo_Dormemo/app/src/main/res/drawable/inputs.xml" value="0.279" />
+        <entry key="..\:/Users/LZS/AndroidStudioProjects/NUMAD22Sp_Final_Team25_Anzhuo_Dormemo/app/src/main/res/layout/activity_login.xml" value="0.25815217391304346" />
+        <entry key="..\:/Users/LZS/AndroidStudioProjects/NUMAD22Sp_Final_Team25_Anzhuo_Dormemo/app/src/main/res/layout/activity_main.xml" value="0.27447916666666666" />
+        <entry key="..\:/Users/LZS/AndroidStudioProjects/NUMAD22Sp_Final_Team25_Anzhuo_Dormemo/app/src/main/res/layout/activity_register.xml" value="0.27447916666666666" />
+        <entry key="..\:/Users/LZS/AndroidStudioProjects/NUMAD22Sp_Final_Team25_Anzhuo_Dormemo/app/src/main/res/layout/app_bar_layout.xml" value="0.3333333333333333" />
+        <entry key="..\:/Users/LZS/AndroidStudioProjects/NUMAD22Sp_Final_Team25_Anzhuo_Dormemo/app/src/main/res/layout/fragment_bill.xml" value="0.25815217391304346" />
       </map>
     </option>
   </component>

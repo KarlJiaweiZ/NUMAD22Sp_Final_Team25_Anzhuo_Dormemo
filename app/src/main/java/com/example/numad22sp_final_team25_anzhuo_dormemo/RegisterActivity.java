@@ -9,6 +9,7 @@ import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -40,6 +41,8 @@ public class RegisterActivity extends AppCompatActivity {
     private DatabaseReference databaseReference;
 
     private ProgressBar progressBar;
+
+    private boolean registerStatus;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,6 +79,7 @@ public class RegisterActivity extends AppCompatActivity {
             public void onClick(View view) {
                 //createNewAccount();
                 checkInput();
+                if(registerStatus)
                 sendRegisterToLoginActivity();
             }
         });
@@ -116,6 +120,7 @@ public class RegisterActivity extends AppCompatActivity {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
                             if(task.isSuccessful()){
+                                registerStatus = true;
                                 String currentUserID = firebaseAuth.getCurrentUser().getUid();
                                 databaseReference.child("Users").child(currentUserID).child("Email").setValue(email);
                                 databaseReference.child("Users").child(currentUserID).child("Password").setValue(password);
@@ -128,7 +133,8 @@ public class RegisterActivity extends AppCompatActivity {
                             }
                             else {
                                 String message = task.getException().toString();
-                                Toast.makeText(RegisterActivity.this, "Error" + message, Toast.LENGTH_SHORT).show();
+                                Toast.makeText(RegisterActivity.this, message.substring(message.indexOf("[")), Toast.LENGTH_LONG).show();
+                                Log.e("Rigister failed", message);
                                 progressBar.setVisibility(View.GONE);
                             }
                         }
