@@ -57,7 +57,7 @@ public class RegisterActivity extends AppCompatActivity {
 
         firebaseAuth = FirebaseAuth.getInstance();
         databaseReference = FirebaseDatabase.getInstance().getReference();
-        
+
         initializeFields();
 
         dormLeaderCheck.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -80,7 +80,7 @@ public class RegisterActivity extends AppCompatActivity {
                 //createNewAccount();
                 checkInput();
                 if(registerStatus)
-                sendRegisterToLoginActivity();
+                    sendRegisterToLoginActivity();
             }
         });
     }
@@ -126,7 +126,12 @@ public class RegisterActivity extends AppCompatActivity {
                                 databaseReference.child("Users").child(currentUserID).child("Password").setValue(password);
                                 databaseReference.child("Users").child(currentUserID).child("Username").setValue(username);
                                 databaseReference.child("Users").child(currentUserID).child("DormName").setValue(dormname);
-                                databaseReference.child("Dorms").child(dormname).child("Leader").setValue(username);
+                                if(dormLeaderCheck.isChecked()){
+                                    databaseReference.child("Dorms").child(dormname).child("Members").child("Leader").child(currentUserID).setValue(username);
+                                }
+                                else{
+                                    databaseReference.child("Dorms").child(dormname).child("Members").child("OtherMembers").child(currentUserID).setValue(username);
+                                }
                                 sendRegisterToMainActivity();
                                 Toast.makeText(RegisterActivity.this,"Account created successful", Toast.LENGTH_SHORT).show();
                                 progressBar.setVisibility(View.GONE);
@@ -134,7 +139,9 @@ public class RegisterActivity extends AppCompatActivity {
                             else {
                                 String message = task.getException().toString();
                                 Toast.makeText(RegisterActivity.this, message.substring(message.indexOf("[")), Toast.LENGTH_LONG).show();
-                                Log.e("Rigister failed", message);
+
+                                Log.e("Register failed", message);
+
                                 progressBar.setVisibility(View.GONE);
                             }
                         }
