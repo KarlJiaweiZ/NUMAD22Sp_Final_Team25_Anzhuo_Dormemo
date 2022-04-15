@@ -130,10 +130,10 @@ public class RegisterActivity extends AppCompatActivity {
                                 //Dorm Part
                                 if(dormLeaderCheck.isChecked()){
                                     //to be the leader
-                                    databaseReference.child("Dorms").child(dormname).child("Members").child("Leader").setValue(currentUserID);
+                                    databaseReference.child("Dorms").child(dormname).child("Members").child("Leader").child(currentUserID).setValue(username);
                                 }else{
                                     //to be a member
-                                    databaseReference.child("Dorms").child(dormname).child("Members").child(currentUserID).setValue(username);
+                                    databaseReference.child("Dorms").child(dormname).child("Members").child("OtherMembers").child(currentUserID).setValue(username);
                                 }
                                 sendRegisterToMainActivity();
                                 Toast.makeText(RegisterActivity.this,"Account created successful", Toast.LENGTH_SHORT).show();
