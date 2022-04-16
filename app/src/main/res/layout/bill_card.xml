@@ -30,7 +30,7 @@
             android:text="Payee" />
 
         <TextView
-            android:id="@+id/bill_reason"
+            android:id="@+id/bill_desc"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/bill_payee"
