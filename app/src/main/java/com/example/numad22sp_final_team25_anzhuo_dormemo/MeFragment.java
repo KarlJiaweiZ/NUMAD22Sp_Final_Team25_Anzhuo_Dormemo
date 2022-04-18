@@ -118,7 +118,9 @@ public class MeFragment extends Fragment {
         changePasswordButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                dialog();
+                Intent intent = new Intent(getContext(), ChangePasswordActivity.class);//might problem in getContext
+                intent.putExtra("EXTRA_current_Email", currentEmail);
+                startActivity(intent);
             }
         });
         logOutButton = (Button) meFragmentView.findViewById(R.id.buttonLogOut);
@@ -156,65 +158,4 @@ public class MeFragment extends Fragment {
 
     }
 
-    private void mUpdatePassword(String oldPass, String newPass) {
-        //String email = currentUser.getEmail();
-        currentEmail = "karlzhangjw@outlook.com";
-        AuthCredential credential = EmailAuthProvider.getCredential(currentEmail, oldPass);
-        // Prompt the user to re-provide their sign-in credentials
-        currentUser.reauthenticate(credential).addOnCompleteListener(new OnCompleteListener<Void>() {
-            @Override
-            public void onComplete(@NonNull Task<Void> task) {
-                if (task.isSuccessful()) {
-                    currentUser.updatePassword(newPass).addOnCompleteListener(new OnCompleteListener<Void>() {
-                        @Override
-                        public void onComplete(@NonNull Task<Void> task) {
-                            if (task.isSuccessful()) {
-                                Log.d("MeFragment", "Password updated");
-                            } else {
-                                Log.d("MeFragment", "Error password not updated");
-                            }
-                        }
-                    });
-                } else {
-                    Log.d("MeFragment", "Error auth failed");
-                }
-            }
-        });
-    }
-    protected void dialog() {
-
-        LayoutInflater inflater = getLayoutInflater();
-        View layout = inflater.inflate(R.layout.dialog_change_pass,
-                (ViewGroup) meFragmentView.findViewById(R.id.dialog_change_pass));
-        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-        oldPassET = (EditText) layout.findViewById(R.id.etOldPass);
-        newPassET = (EditText) layout.findViewById(R.id.etNewPass);
-
-        builder.setTitle("Change new password");
-        builder.setView(layout);
-
-        builder.setPositiveButton("yes", new DialogInterface.OnClickListener() {
-
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                String oldPass = oldPassET.toString();
-                String newPass = newPassET.toString();
-                oldPass = "123456";
-                newPass = "1234";
-                mUpdatePassword(oldPass, newPass);
-                sendUserToMainActivity();
-                dialog.dismiss();
-
-            }
-        });
-
-        builder.setNegativeButton("cancel", new DialogInterface.OnClickListener() {
-
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-            }
-        });
-        builder.create().show();
-    }
 }
