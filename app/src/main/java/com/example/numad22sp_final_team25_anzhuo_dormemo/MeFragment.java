@@ -1,5 +1,7 @@
 package com.example.numad22sp_final_team25_anzhuo_dormemo;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -11,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -42,7 +45,7 @@ public class MeFragment extends Fragment {
     private static final int PICK_IMAGE_REQUEST = 1;
 
     private View meFragmentView;
-    private String currentUserID, currentUserName, currentDormName, currentEmail, currentPass, newPass;
+    private String currentUserID, currentUserName, currentDormName, currentEmail, currentPass;
 
     private ImageView userPicIV;
     private TextView userStatusTV;
@@ -50,6 +53,7 @@ public class MeFragment extends Fragment {
     private Button changePasswordButton;
     private Button changeDormNameButton;
     private Button logOutButton;
+    private EditText newPassET, oldPassET;
 
     private FirebaseUser currentUser;
     private FirebaseAuth firebaseAuth;
@@ -72,6 +76,11 @@ public class MeFragment extends Fragment {
         startActivity(loginIntent);
     }
 
+    private void sendUserToMainActivity() {
+        Intent mainIntent = new Intent(getActivity(), MainActivity.class);
+        startActivity(mainIntent);
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -80,8 +89,6 @@ public class MeFragment extends Fragment {
 
         firebaseAuth = FirebaseAuth.getInstance();
         currentUser = firebaseAuth.getCurrentUser();
-        //storageReference = FirebaseStorage.getInstance().getReference("images/"+ "default_avatar.png");
-
 
         if(currentUser == null){
             SendUserToLoginActivity();
@@ -111,8 +118,7 @@ public class MeFragment extends Fragment {
         changePasswordButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                newPass = "123456";
-                updatePassword();
+                dialog();
             }
         });
         logOutButton = (Button) meFragmentView.findViewById(R.id.buttonLogOut);
@@ -131,11 +137,12 @@ public class MeFragment extends Fragment {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if(snapshot.exists() && snapshot.hasChild("Username")){
                     currentEmail = snapshot.child("Email").getValue().toString();
-                    currentPass = snapshot.child("Password").getValue().toString();
+                    //currentPass = snapshot.child("Password").getValue().toString();
                     String retrieveUsername = snapshot.child("Username").getValue().toString();
                     currentUserNameTV.setText(retrieveUsername);
                     String imageUri = snapshot.child("UserPic").getValue().toString();
                     Picasso.get().load(imageUri).into(userPicIV);
+
                 } else {
                     Log.d("MeFragment", "retrieveUserInfo: userRef wrong!");
                 }
@@ -149,11 +156,10 @@ public class MeFragment extends Fragment {
 
     }
 
-    private void updatePassword() {
-        Toast.makeText(getActivity(), "before", Toast.LENGTH_SHORT);
-        String email = currentUser.getEmail();
-        Toast.makeText(getActivity(), "1232121414" + email, Toast.LENGTH_SHORT);
-        AuthCredential credential = EmailAuthProvider.getCredential(email, currentPass);
+    private void mUpdatePassword(String oldPass, String newPass) {
+        //String email = currentUser.getEmail();
+        currentEmail = "karlzhangjw@outlook.com";
+        AuthCredential credential = EmailAuthProvider.getCredential(currentEmail, oldPass);
         // Prompt the user to re-provide their sign-in credentials
         currentUser.reauthenticate(credential).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
@@ -174,5 +180,41 @@ public class MeFragment extends Fragment {
                 }
             }
         });
+    }
+    protected void dialog() {
+
+        LayoutInflater inflater = getLayoutInflater();
+        View layout = inflater.inflate(R.layout.dialog_change_pass,
+                (ViewGroup) meFragmentView.findViewById(R.id.dialog_change_pass));
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        oldPassET = (EditText) layout.findViewById(R.id.etOldPass);
+        newPassET = (EditText) layout.findViewById(R.id.etNewPass);
+
+        builder.setTitle("Change new password");
+        builder.setView(layout);
+
+        builder.setPositiveButton("yes", new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                String oldPass = oldPassET.toString();
+                String newPass = newPassET.toString();
+                oldPass = "123456";
+                newPass = "1234";
+                mUpdatePassword(oldPass, newPass);
+                sendUserToMainActivity();
+                dialog.dismiss();
+
+            }
+        });
+
+        builder.setNegativeButton("cancel", new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        builder.create().show();
     }
 }

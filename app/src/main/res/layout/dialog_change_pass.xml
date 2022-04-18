@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/dialog_change_pass"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="#ffffffff"
+    android:orientation="vertical">
+
+    <EditText
+        android:id="@+id/etOldPass"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="old password"
+        android:minWidth="100dip" />
+
+    <EditText
+        android:id="@+id/etNewPass"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="new password"
+        android:minWidth="100dip" />
+
+
+
+</LinearLayout>
