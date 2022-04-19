@@ -52,4 +52,8 @@ public class BillRviewAdapter extends RecyclerView.Adapter<BillRviewHolder>{
     public int getItemCount() {
         return cardList.size();
     }
+
+    public BillCard getItem(int position){
+        return cardList.get(position);
+    }
 }

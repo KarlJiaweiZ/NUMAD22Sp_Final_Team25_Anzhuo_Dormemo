@@ -17,7 +17,7 @@ public class BillCard implements BillCardClickListener{
     }
 
     public String getBillName() {
-        return billName;
+        return billName + (isChecked? "(Payed)" : "");
     }
 
     public String getBillPayee() {

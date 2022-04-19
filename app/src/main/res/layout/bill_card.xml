@@ -16,7 +16,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
             android:layout_marginTop="7dp"
-            android:text="BillName"
+            android:text="PayerName"
             android:textSize="20sp"
             android:textStyle="bold" />
 
@@ -26,8 +26,9 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/bill_name"
             android:layout_marginStart="10dp"
-            android:layout_marginTop="7dp"
-            android:text="Payee" />
+            android:layout_marginTop="10dp"
+            android:text="Payee"
+            android:textSize="15sp"/>
 
         <TextView
             android:id="@+id/bill_desc"
@@ -35,9 +36,10 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/bill_payee"
             android:layout_marginStart="10dp"
-            android:layout_marginTop="7dp"
+            android:layout_marginTop="10dp"
             android:layout_marginBottom="10dp"
-            android:text="reason" />
+            android:text="Description"
+            android:textSize="15sp"/>
 
         <TextView
             android:id="@+id/bill_fee"
@@ -46,7 +48,8 @@
             android:layout_alignParentEnd="true"
             android:layout_marginTop="7dp"
             android:layout_marginEnd="10dp"
-            android:text="Amount" />
+            android:text="Amount"
+            android:textSize="20sp"/>
 
         <CheckBox
             android:id="@+id/bill_checkbox"
@@ -57,7 +60,8 @@
             android:layout_marginStart="10dp"
             android:layout_marginTop="30dp"
             android:layout_marginEnd="10dp"
-            android:checked="false" />
+            android:checked="false"
+            />
 
     </RelativeLayout>
 
