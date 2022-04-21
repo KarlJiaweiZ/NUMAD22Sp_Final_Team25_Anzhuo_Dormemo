@@ -1,5 +1,6 @@
 package com.example.numad22sp_final_team25_anzhuo_dormemo.bill;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +15,7 @@ import java.util.ArrayList;
 public class BillRviewAdapter extends RecyclerView.Adapter<BillRviewHolder>{
     private ArrayList<BillCard> cardList;
     private BillCardClickListener listener;
+    private String currentUserName;
 
     public BillRviewAdapter(ArrayList<BillCard> cardList) {
         this.cardList = cardList;
@@ -21,6 +23,10 @@ public class BillRviewAdapter extends RecyclerView.Adapter<BillRviewHolder>{
 
     public void setOnBillCardClickListener(BillCardClickListener listener){
         this.listener = listener;
+    }
+
+    public void setCurrentUserName(String name){
+        currentUserName = name;
     }
 
     //This method will be called by the RecyclerView to obtain a ViewHolder object. It inflates the view hierarchy
@@ -45,7 +51,15 @@ public class BillRviewAdapter extends RecyclerView.Adapter<BillRviewHolder>{
         holder.billPayee.setText(currentCard.getBillPayee());
         holder.billDesc.setText(currentCard.getBillDesc());
         holder.billAmount.setText(currentCard.getBillFee());
+        Log.d("holder user name: ", holder.billName.getText().toString());
+        Log.d("current user name: ", "Payer: "+currentUserName);
+        //only payer can set bill as settled
+        if(holder.billName.getText().toString().equals("Payer: "+currentUserName)){
+            holder.checkBox.setEnabled(true);
+        }
         holder.checkBox.setChecked(currentCard.isChecked());
+
+
     }
 
     @Override

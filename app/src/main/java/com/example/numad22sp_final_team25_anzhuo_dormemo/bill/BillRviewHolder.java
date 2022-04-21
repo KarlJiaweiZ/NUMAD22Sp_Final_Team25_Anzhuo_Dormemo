@@ -34,7 +34,7 @@ public class BillRviewHolder extends RecyclerView.ViewHolder{
             }
         });
 
-        itemView.setOnClickListener(new View.OnClickListener() {
+        checkBox.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if(listener != null){

@@ -4,26 +4,19 @@
     android:layout_height="match_parent"
     android:padding="16dp">
 
-    <EditText
-        android:hint="Enter Bill Name"
-        android:id="@+id/enter_bill_name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
 
     <EditText
         android:id="@+id/enter_bill_amount"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="50dp"
-        android:layout_alignParentEnd="true"
-        android:hint="Enter Amount"
+        android:hint="Enter Bill Amount"
         android:inputType="numberDecimal" />
 
     <EditText
         android:id="@+id/enter_bill_desc"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/enter_bill_name"
+        android:layout_below="@id/enter_bill_amount"
         android:layout_alignParentStart="true"
         android:hint="Enter Bill Description" />
 </RelativeLayout>

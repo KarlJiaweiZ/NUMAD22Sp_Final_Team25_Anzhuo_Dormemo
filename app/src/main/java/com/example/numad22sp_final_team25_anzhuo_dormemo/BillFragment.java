@@ -2,6 +2,7 @@ package com.example.numad22sp_final_team25_anzhuo_dormemo;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -10,6 +11,7 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,9 +25,14 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class BillFragment extends Fragment {
     //View component
@@ -45,7 +52,7 @@ public class BillFragment extends Fragment {
 
     private FirebaseUser currentUser;
     private FirebaseAuth firebaseAuth;
-    private DatabaseReference usersRef, dormRef, groupMessageKeyRef;
+    private DatabaseReference usersRef, dormRef;
 
     public BillFragment() {
         // Required empty public constructor
@@ -57,22 +64,33 @@ public class BillFragment extends Fragment {
     }
 
     @Override
+    public void onStart() {
+        super.onStart();
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         billFragView = inflater.inflate(R.layout.fragment_bill, container, false);
 
+        //firebase components
+        firebaseAuth = FirebaseAuth.getInstance();
+        currentUser = firebaseAuth.getCurrentUser();
+        if(currentUser == null){
+            Intent loginIntent = new Intent(getActivity(), LoginActivity.class);
+            startActivity(loginIntent);
+        }
+        currentUserID = currentUser.getUid();
+        usersRef = FirebaseDatabase.getInstance().getReference().child("Users");
+        dormRef = FirebaseDatabase.getInstance().getReference().child("Dorms");
+        getUserInfo();
         //part1. initiate the field
         init(savedInstanceState);
 
         //part2. set up add button
         addBillButton = billFragView.findViewById(R.id.add_bill_button);
-        addBillButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                createDialog();
-            }
-        });
+        addBillButton.setOnClickListener(view -> createDialog());
 
         //part3. touch helper (minor task)
 //        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
@@ -100,6 +118,23 @@ public class BillFragment extends Fragment {
 //        itemTouchHelper.attachToRecyclerView(recyclerView);
         return billFragView;
 
+    }
+
+    private void getUserInfo() {
+        usersRef.child(currentUserID).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if(snapshot.exists()){
+                    currentUserName = Objects.requireNonNull(snapshot.child("Username").getValue()).toString();
+                    adapter.setCurrentUserName(currentUserName);
+                    currentDormName = Objects.requireNonNull(snapshot.child("DormName").getValue()).toString();
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
     }
 
     private void init(Bundle savedInstanceState){
@@ -147,19 +182,20 @@ public class BillFragment extends Fragment {
         BillCardClickListener billCardClickListener = new BillCardClickListener() {
             @Override
             public String onBillCardClick(int position) {
-                //TODO: set on bill card click operation
                 return null;
             }
 
             @Override
             public void onCheckBoxClick(int position) {
                 //TODO: implement click gray
-                cardList.get(position).onCheckBoxClick(position);
-                adapter.notifyItemChanged(position);
+                    cardList.get(position).onCheckBoxClick(position);
+                    adapter.notifyItemChanged(position);
             }
         };
 
         adapter.setOnBillCardClickListener(billCardClickListener);
+        //adapter.setCurrentUserName(currentUserName);
+
 
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(layoutManager);
@@ -168,7 +204,7 @@ public class BillFragment extends Fragment {
     //dialog to create bill card
     private void createDialog(){
         View view = LayoutInflater.from(this.getContext()).inflate(R.layout.add_bill_dialog, null, false);
-        EditText enterBillName = view.findViewById(R.id.enter_bill_name);
+//        EditText enterBillName = view.findViewById(R.id.enter_bill_name);
         EditText enterBillAmount = view.findViewById(R.id.enter_bill_amount);
         EditText enterBillDesc = view.findViewById(R.id.enter_bill_desc);
         //TODO: payee to be implemented
@@ -194,30 +230,27 @@ public class BillFragment extends Fragment {
         dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String name = enterBillName.getText().toString();
+                //String name = enterBillName.getText().toString();
                 String amount = enterBillAmount.getText().toString();
                 String desc = enterBillDesc.getText().toString();
-                if(name.isEmpty())
-                    Toast.makeText(getContext(), "must enter a name", Toast.LENGTH_LONG).show();
+//                if(name.isEmpty())
+//                    Toast.makeText(getContext(), "must enter a name", Toast.LENGTH_LONG).show();
                 if(amount.isEmpty())
-                    Toast.makeText(getContext(), "must enter an amount", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getContext(), "must enter bill amount", Toast.LENGTH_SHORT).show();
                 if(desc.isEmpty())
-                    Toast.makeText(getContext(), "must enter a description", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getContext(), "must enter description", Toast.LENGTH_SHORT).show();
 
-
-                if(!name.isEmpty() && !amount.isEmpty() && !desc.isEmpty()){
-                    addBill(0, name, amount, desc);
+                if(!amount.isEmpty() && !desc.isEmpty()){
+                    addBill(0, amount, desc);
                     dialog.dismiss();
                 }
-
-
 
             }
         });
     }
 
-    void addBill(int position, String name, String amount, String desc){
-        cardList.add(position, new BillCard(name, "payee", desc, amount, false));
+    void addBill(int position, String amount, String desc){
+        cardList.add(position, new BillCard("Payer: "+currentUserName, "payee", "Desc: "+desc, amount, false));
         adapter.notifyItemChanged(position);
     }
 
