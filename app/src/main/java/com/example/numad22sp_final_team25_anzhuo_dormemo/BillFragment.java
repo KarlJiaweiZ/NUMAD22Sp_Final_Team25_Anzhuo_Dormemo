@@ -21,6 +21,7 @@ import android.widget.Toast;
 import com.example.numad22sp_final_team25_anzhuo_dormemo.bill.BillCard;
 import com.example.numad22sp_final_team25_anzhuo_dormemo.bill.BillCardClickListener;
 import com.example.numad22sp_final_team25_anzhuo_dormemo.bill.BillRviewAdapter;
+import com.example.numad22sp_final_team25_anzhuo_dormemo.bill.FetchData;
 import com.google.android.gms.tasks.Tasks;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
@@ -55,7 +56,8 @@ public class BillFragment extends Fragment {
     private FirebaseAuth firebaseAuth;
     private DatabaseReference usersRef, dormRef;
 
-    String[] allRoommates;
+    FetchData fd;
+    //String[] allRoommates;
     boolean[] checkedRoommates;
     ArrayList<Integer> selectedRoommatesIndex;
     int ir;
@@ -90,7 +92,8 @@ public class BillFragment extends Fragment {
         currentUserID = currentUser.getUid();
         usersRef = FirebaseDatabase.getInstance().getReference().child("Users");
         dormRef = FirebaseDatabase.getInstance().getReference().child("Dorms");
-        getUserName();
+        currentDormName = MainActivity.dormName;
+        getUserInfo();
         //part1. initiate the field
         init(savedInstanceState);
 
@@ -100,38 +103,12 @@ public class BillFragment extends Fragment {
 
         //retrieve the db and get all roommates
         ir = 0;
-        allRoommates = new String[100];
+        fd = new FetchData();
         checkedRoommates = new boolean[100];
         selectedRoommatesIndex = new ArrayList<>();
-        currentDormName = MainActivity.dormName;
 
-        dormRef.child(currentDormName).child("Members").child("Leader").addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-                    allRoommates[ir++] = dataSnapshot.getValue().toString();
-                }
-            }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
-        dormRef.child(currentDormName).child("Members").child("OtherMembers").addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-                    allRoommates[ir++] = dataSnapshot.getValue().toString();
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
-        Log.d("roommates", Arrays.toString(allRoommates));
+        //Log.d("roommates", Arrays.toString(allRoommates));
         //part3. touch helper (minor task)
 //        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
 //            @Override
@@ -162,7 +139,8 @@ public class BillFragment extends Fragment {
 
     }
 
-    private void getUserName() {
+    private void getUserInfo() {
+        //get current user name
         usersRef.child(currentUserID).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -171,6 +149,33 @@ public class BillFragment extends Fragment {
                     adapter.setCurrentUserName(currentUserName);
                     //currentDormName = Objects.requireNonNull(snapshot.child("DormName").getValue()).toString();
                 }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+        //get leader name
+        dormRef.child(currentDormName).child("Members").child("Leader").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                     fd.addRoommates(dataSnapshot.getValue().toString());
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+        //get other members name
+        dormRef.child(currentDormName).child("Members").child("OtherMembers").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                    fd.addRoommates(dataSnapshot.getValue().toString());                }
             }
 
             @Override
@@ -245,6 +250,7 @@ public class BillFragment extends Fragment {
 
     //dialog to create bill card
     private void createDialog() {
+        Log.d("roommates", Arrays.toString(fd.getAllRoommates()));
         View view = LayoutInflater.from(this.getContext()).inflate(R.layout.add_bill_dialog, null, false);
         EditText enterBillAmount = view.findViewById(R.id.enter_bill_amount);
         EditText enterBillDesc = view.findViewById(R.id.enter_bill_desc);
@@ -264,7 +270,7 @@ public class BillFragment extends Fragment {
                     }
                 })
                 .setCancelable(false)
-                .setMultiChoiceItems(allRoommates, checkedRoommates, new DialogInterface.OnMultiChoiceClickListener() {
+                .setMultiChoiceItems(fd.getAllRoommates(), checkedRoommates, new DialogInterface.OnMultiChoiceClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int position, boolean isChecked) {
                         if(isChecked){
@@ -294,7 +300,7 @@ public class BillFragment extends Fragment {
                 else {
                     String rm = "";
                     for(int i = 0; i < selectedRoommatesIndex.size(); i++){
-                        rm += allRoommates[selectedRoommatesIndex.get(i)];
+                        rm += fd.getAllRoommates()[selectedRoommatesIndex.get(i)];
                         if(i != selectedRoommatesIndex.size()-1)
                             rm += ", ";
                     }
