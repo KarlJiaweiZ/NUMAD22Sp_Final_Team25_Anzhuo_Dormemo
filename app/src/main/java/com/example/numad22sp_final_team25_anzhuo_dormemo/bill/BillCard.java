@@ -29,7 +29,7 @@ public class BillCard implements BillCardClickListener{
     }
 
     public String getBillFee() {
-        return billFee;
+        return billFee + (isChecked?"(Payed)":"");
     }
 
     public boolean isChecked() {

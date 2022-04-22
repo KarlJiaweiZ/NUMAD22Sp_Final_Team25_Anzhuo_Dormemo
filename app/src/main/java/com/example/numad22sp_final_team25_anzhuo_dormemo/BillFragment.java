@@ -298,6 +298,7 @@ public class BillFragment extends Fragment {
                         if(i != selectedRoommatesIndex.size()-1)
                             rm += ", ";
                     }
+                    selectedRoommatesIndex.clear();
                     addBill(0, amount, rm, desc);
                     dialog.dismiss();
                 }
@@ -309,7 +310,7 @@ public class BillFragment extends Fragment {
         BillCard billCard = new BillCard("Payer: " + currentUserName, "Payee: "+payee, "Desc: " + desc, "$"+amount, false);
         cardList.add(position, billCard);
         saveBillToDB(billCard);
-        adapter.notifyItemChanged(position);
+        adapter.notifyDataSetChanged();
     }
 
     private void saveBillToDB(BillCard billCard){
