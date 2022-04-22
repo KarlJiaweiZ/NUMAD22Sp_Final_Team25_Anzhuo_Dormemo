@@ -7,7 +7,6 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -15,14 +14,15 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.numad22sp_final_team25_anzhuo_dormemo.bill.BillCard;
 import com.example.numad22sp_final_team25_anzhuo_dormemo.bill.BillCardClickListener;
 import com.example.numad22sp_final_team25_anzhuo_dormemo.bill.BillRviewAdapter;
+import com.google.android.gms.tasks.Tasks;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -32,6 +32,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Objects;
 
 public class BillFragment extends Fragment {
@@ -53,6 +54,11 @@ public class BillFragment extends Fragment {
     private FirebaseUser currentUser;
     private FirebaseAuth firebaseAuth;
     private DatabaseReference usersRef, dormRef;
+
+    String[] allRoommates;
+    boolean[] checkedRoommates;
+    ArrayList<Integer> selectedRoommatesIndex;
+    int ir;
 
     public BillFragment() {
         // Required empty public constructor
@@ -77,14 +83,14 @@ public class BillFragment extends Fragment {
         //firebase components
         firebaseAuth = FirebaseAuth.getInstance();
         currentUser = firebaseAuth.getCurrentUser();
-        if(currentUser == null){
+        if (currentUser == null) {
             Intent loginIntent = new Intent(getActivity(), LoginActivity.class);
             startActivity(loginIntent);
         }
         currentUserID = currentUser.getUid();
         usersRef = FirebaseDatabase.getInstance().getReference().child("Users");
         dormRef = FirebaseDatabase.getInstance().getReference().child("Dorms");
-        getUserInfo();
+        getUserName();
         //part1. initiate the field
         init(savedInstanceState);
 
@@ -92,6 +98,40 @@ public class BillFragment extends Fragment {
         addBillButton = billFragView.findViewById(R.id.add_bill_button);
         addBillButton.setOnClickListener(view -> createDialog());
 
+        //retrieve the db and get all roommates
+        ir = 0;
+        allRoommates = new String[100];
+        checkedRoommates = new boolean[100];
+        selectedRoommatesIndex = new ArrayList<>();
+        currentDormName = MainActivity.dormName;
+
+        dormRef.child(currentDormName).child("Members").child("Leader").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                    allRoommates[ir++] = dataSnapshot.getValue().toString();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+        dormRef.child(currentDormName).child("Members").child("OtherMembers").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                    allRoommates[ir++] = dataSnapshot.getValue().toString();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+        Log.d("roommates", Arrays.toString(allRoommates));
         //part3. touch helper (minor task)
 //        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
 //            @Override
@@ -116,20 +156,23 @@ public class BillFragment extends Fragment {
 //            }
 //        });
 //        itemTouchHelper.attachToRecyclerView(recyclerView);
+
+
         return billFragView;
 
     }
 
-    private void getUserInfo() {
+    private void getUserName() {
         usersRef.child(currentUserID).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if(snapshot.exists()){
+                if (snapshot.exists()) {
                     currentUserName = Objects.requireNonNull(snapshot.child("Username").getValue()).toString();
                     adapter.setCurrentUserName(currentUserName);
-                    currentDormName = Objects.requireNonNull(snapshot.child("DormName").getValue()).toString();
+                    //currentDormName = Objects.requireNonNull(snapshot.child("DormName").getValue()).toString();
                 }
             }
+
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
 
@@ -137,14 +180,13 @@ public class BillFragment extends Fragment {
         });
     }
 
-    private void init(Bundle savedInstanceState){
+    private void init(Bundle savedInstanceState) {
         //initialItemData(savedInstanceState);
         createRview();
     }
 
 
-
-//    private void initialItemData(Bundle savedInstanceState) {
+    //    private void initialItemData(Bundle savedInstanceState) {
 //
 //        // Not the first time to open this Activity, Extract data from saved instance state
 //        if (savedInstanceState != null && savedInstanceState.containsKey(NUMBER_OF_ITEMS)) {
@@ -172,7 +214,7 @@ public class BillFragment extends Fragment {
 //        }
 //
 //    }
-    private void createRview(){
+    private void createRview() {
         recyclerView = billFragView.findViewById(R.id.bill_recycler_view);
         recyclerView.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(billFragView.getContext());
@@ -188,8 +230,8 @@ public class BillFragment extends Fragment {
             @Override
             public void onCheckBoxClick(int position) {
                 //TODO: implement click gray
-                    cardList.get(position).onCheckBoxClick(position);
-                    adapter.notifyItemChanged(position);
+                cardList.get(position).onCheckBoxClick(position);
+                adapter.notifyItemChanged(position);
             }
         };
 
@@ -202,9 +244,8 @@ public class BillFragment extends Fragment {
     }
 
     //dialog to create bill card
-    private void createDialog(){
+    private void createDialog() {
         View view = LayoutInflater.from(this.getContext()).inflate(R.layout.add_bill_dialog, null, false);
-//        EditText enterBillName = view.findViewById(R.id.enter_bill_name);
         EditText enterBillAmount = view.findViewById(R.id.enter_bill_amount);
         EditText enterBillDesc = view.findViewById(R.id.enter_bill_desc);
         //TODO: payee to be implemented
@@ -222,35 +263,52 @@ public class BillFragment extends Fragment {
 
                     }
                 })
-                .setCancelable(true);
+                .setCancelable(false)
+                .setMultiChoiceItems(allRoommates, checkedRoommates, new DialogInterface.OnMultiChoiceClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int position, boolean isChecked) {
+                        if(isChecked){
+                            if(!selectedRoommatesIndex.contains(position)){
+                                selectedRoommatesIndex.add(position);
+                            }else{
+                                selectedRoommatesIndex.remove(position);
+                            }
+                        }
+                    }
+                });
+
 
         AlertDialog dialog = builder.create();
         dialog.show();
+
         //to prevent dialog from dismiss we need to override the positive button outside the builder
         dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //String name = enterBillName.getText().toString();
                 String amount = enterBillAmount.getText().toString();
                 String desc = enterBillDesc.getText().toString();
-//                if(name.isEmpty())
-//                    Toast.makeText(getContext(), "must enter a name", Toast.LENGTH_LONG).show();
-                if(amount.isEmpty())
+                if (amount.isEmpty())
                     Toast.makeText(getContext(), "must enter bill amount", Toast.LENGTH_SHORT).show();
-                if(desc.isEmpty())
+                else if (desc.isEmpty())
                     Toast.makeText(getContext(), "must enter description", Toast.LENGTH_SHORT).show();
-
-                if(!amount.isEmpty() && !desc.isEmpty()){
-                    addBill(0, amount, desc);
+                else {
+                    String rm = "";
+                    for(int i = 0; i < selectedRoommatesIndex.size(); i++){
+                        rm += allRoommates[selectedRoommatesIndex.get(i)];
+                        if(i != selectedRoommatesIndex.size()-1)
+                            rm += ", ";
+                    }
+                    addBill(0, amount, rm, desc);
                     dialog.dismiss();
                 }
-
             }
         });
+
+
     }
 
-    void addBill(int position, String amount, String desc){
-        cardList.add(position, new BillCard("Payer: "+currentUserName, "payee", "Desc: "+desc, amount, false));
+    void addBill(int position, String amount, String payee, String desc) {
+        cardList.add(position, new BillCard("Payer: " + currentUserName, payee, "Desc: " + desc, amount, false));
         adapter.notifyItemChanged(position);
     }
 
