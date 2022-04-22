@@ -36,10 +36,10 @@ public class BillCard implements BillCardClickListener{
         return isChecked;
     }
 
-    @Override
-    public String onBillCardClick(int position) {
-        return null;
-    }
+//    @Override
+//    public String onBillCardClick(int position) {
+//        return null;
+//    }
 
     @Override
     public void onCheckBoxClick(int position) {

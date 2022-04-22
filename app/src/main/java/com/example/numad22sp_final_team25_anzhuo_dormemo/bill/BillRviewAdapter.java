@@ -1,5 +1,6 @@
 package com.example.numad22sp_final_team25_anzhuo_dormemo.bill;
 
+import android.graphics.Color;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -58,7 +59,19 @@ public class BillRviewAdapter extends RecyclerView.Adapter<BillRviewHolder>{
             holder.checkBox.setEnabled(true);
         }
         holder.checkBox.setChecked(currentCard.isChecked());
-
+        if(currentCard.isChecked()){
+            holder.relativeLayout.setBackgroundColor(Color.LTGRAY);
+            holder.billName.setTextColor(Color.WHITE);
+            holder.billPayee.setTextColor(Color.WHITE);
+            holder.billDesc.setTextColor(Color.WHITE);
+            holder.billAmount.setTextColor(Color.WHITE);
+        }else{
+            holder.relativeLayout.setBackgroundColor(Color.WHITE);
+            holder.billName.setTextColor(Color.GRAY);
+            holder.billPayee.setTextColor(Color.GRAY);
+            holder.billDesc.setTextColor(Color.GRAY);
+            holder.billAmount.setTextColor(Color.GRAY);
+        }
 
     }
 

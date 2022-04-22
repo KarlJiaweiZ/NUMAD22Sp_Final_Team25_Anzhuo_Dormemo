@@ -4,9 +4,11 @@
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_margin="2dp"
-    app:cardCornerRadius="5dp">
+    app:cardCornerRadius="5dp"
+    android:id="@+id/bill_card_view">
 
     <RelativeLayout
+        android:id="@+id/bill_relative_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -17,7 +19,7 @@
             android:layout_marginStart="10dp"
             android:layout_marginTop="7dp"
             android:text="PayerName"
-            android:textSize="20sp"
+            android:textSize="25sp"
             android:textStyle="bold" />
 
         <TextView
@@ -28,7 +30,7 @@
             android:layout_marginStart="10dp"
             android:layout_marginTop="10dp"
             android:text="Payee"
-            android:textSize="15sp"/>
+            android:textSize="20sp" />
 
         <TextView
             android:id="@+id/bill_desc"
@@ -39,7 +41,7 @@
             android:layout_marginTop="10dp"
             android:layout_marginBottom="10dp"
             android:text="Description"
-            android:textSize="15sp"/>
+            android:textSize="20sp"/>
 
         <TextView
             android:id="@+id/bill_fee"
@@ -49,19 +51,19 @@
             android:layout_marginTop="7dp"
             android:layout_marginEnd="10dp"
             android:text="Amount"
-            android:textSize="20sp"/>
+            android:textSize="25sp"/>
 
         <CheckBox
             android:id="@+id/bill_checkbox"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
             android:layout_below="@id/bill_fee"
             android:layout_alignParentEnd="true"
             android:layout_marginStart="10dp"
             android:layout_marginTop="30dp"
             android:layout_marginEnd="10dp"
             android:checked="false"
-            android:enabled="false"/>
+            android:enabled="false" />
 
     </RelativeLayout>
 

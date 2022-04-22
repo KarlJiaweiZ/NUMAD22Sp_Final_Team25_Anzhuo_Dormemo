@@ -57,7 +57,6 @@ public class BillFragment extends Fragment {
     private DatabaseReference usersRef, dormRef;
 
     FetchData fd;
-    //String[] allRoommates;
     boolean[] checkedRoommates;
     ArrayList<Integer> selectedRoommatesIndex;
     int ir;
@@ -82,7 +81,7 @@ public class BillFragment extends Fragment {
         // Inflate the layout for this fragment
         billFragView = inflater.inflate(R.layout.fragment_bill, container, false);
 
-        //firebase components
+        //firebase components initiate
         firebaseAuth = FirebaseAuth.getInstance();
         currentUser = firebaseAuth.getCurrentUser();
         if (currentUser == null) {
@@ -94,6 +93,7 @@ public class BillFragment extends Fragment {
         dormRef = FirebaseDatabase.getInstance().getReference().child("Dorms");
         currentDormName = MainActivity.dormName;
         getUserInfo();
+
         //part1. initiate the field
         init(savedInstanceState);
 
@@ -107,8 +107,8 @@ public class BillFragment extends Fragment {
         checkedRoommates = new boolean[100];
         selectedRoommatesIndex = new ArrayList<>();
 
+        //display bills from firebase
 
-        //Log.d("roommates", Arrays.toString(allRoommates));
         //part3. touch helper (minor task)
 //        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
 //            @Override
@@ -225,12 +225,11 @@ public class BillFragment extends Fragment {
         layoutManager = new LinearLayoutManager(billFragView.getContext());
         adapter = new BillRviewAdapter(cardList);
 
-
         BillCardClickListener billCardClickListener = new BillCardClickListener() {
-            @Override
-            public String onBillCardClick(int position) {
-                return null;
-            }
+//            @Override
+//            public String onBillCardClick(int position) {
+//                return null;
+//            }
 
             @Override
             public void onCheckBoxClick(int position) {
@@ -241,8 +240,6 @@ public class BillFragment extends Fragment {
         };
 
         adapter.setOnBillCardClickListener(billCardClickListener);
-        //adapter.setCurrentUserName(currentUserName);
-
 
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(layoutManager);
@@ -254,7 +251,6 @@ public class BillFragment extends Fragment {
         View view = LayoutInflater.from(this.getContext()).inflate(R.layout.add_bill_dialog, null, false);
         EditText enterBillAmount = view.findViewById(R.id.enter_bill_amount);
         EditText enterBillDesc = view.findViewById(R.id.enter_bill_desc);
-        //TODO: payee to be implemented
         AlertDialog.Builder builder = new AlertDialog.Builder(this.getContext()).setTitle("Add a New Bill")
                 .setView(view)
                 .setPositiveButton("Add", new DialogInterface.OnClickListener() {
@@ -282,8 +278,6 @@ public class BillFragment extends Fragment {
                         }
                     }
                 });
-
-
         AlertDialog dialog = builder.create();
         dialog.show();
 
@@ -309,13 +303,17 @@ public class BillFragment extends Fragment {
                 }
             }
         });
-
-
     }
 
     void addBill(int position, String amount, String payee, String desc) {
-        cardList.add(position, new BillCard("Payer: " + currentUserName, payee, "Desc: " + desc, amount, false));
+        BillCard billCard = new BillCard("Payer: " + currentUserName, "Payee: "+payee, "Desc: " + desc, "$"+amount, false);
+        cardList.add(position, billCard);
+        saveBillToDB(billCard);
         adapter.notifyItemChanged(position);
+    }
+
+    private void saveBillToDB(BillCard billCard){
+
     }
 
 }
