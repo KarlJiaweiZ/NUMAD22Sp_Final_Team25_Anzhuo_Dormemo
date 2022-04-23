@@ -7,12 +7,14 @@ public class BillCard implements BillCardClickListener{
     private final String billDesc;
     private final String billFee;
     private boolean isChecked;
+    private final String uid;
 
-    public BillCard(String billName, String billPayee, String billDesc, String billFee, boolean isChecked) {
+    public BillCard(String billName, String billPayee, String billDesc, String billFee, String uid, boolean isChecked) {
         this.billName = billName;
         this.billPayee = billPayee;
         this.billDesc = billDesc;
         this.billFee = billFee;
+        this.uid = uid;
         this.isChecked = isChecked;
     }
 
@@ -36,7 +38,11 @@ public class BillCard implements BillCardClickListener{
         return isChecked;
     }
 
-//    @Override
+    public String getUid() {
+        return uid;
+    }
+
+    //    @Override
 //    public String onBillCardClick(int position) {
 //        return null;
 //    }

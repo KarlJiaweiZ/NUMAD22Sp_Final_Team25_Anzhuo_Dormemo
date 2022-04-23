@@ -141,7 +141,8 @@ public class BillFragment extends Fragment {
                     boolean isChecked = (boolean) ((DataSnapshot)iterator.next()).getValue();
                     String payee = (String) ((DataSnapshot)iterator.next()).getValue();
                     String payer = (String) ((DataSnapshot)iterator.next()).getValue();
-                    addBillLocal(payer, amount, payee, desc);
+                    String uid = (String) ((DataSnapshot)iterator.next()).getValue();
+                    addBillLocal(payer, amount, payee, desc, uid, isChecked);
                 }
             }
 
@@ -291,8 +292,11 @@ public class BillFragment extends Fragment {
             @Override
             public void onCheckBoxClick(int position) {
                 //TODO: update isChecked on database
-                cardList.get(position).onCheckBoxClick(position);
+                BillCard billCard = cardList.get(position);
+                billCard.onCheckBoxClick(position);
                 adapter.notifyItemChanged(position);
+                String billId = billCard.getUid();
+                dormRef.child(currentDormName).child("bills").child(billId).child("isChecked").setValue(billCard.isChecked());
             }
         };
 
@@ -374,11 +378,12 @@ public class BillFragment extends Fragment {
         billInfo.put("amount", amount);
         billInfo.put("desc", desc);
         billInfo.put("isChecked", false);
+        billInfo.put("uid", billKey);
         dormBillKeyRef.updateChildren(billInfo);
     }
 
-    private void addBillLocal(String payer, String amount, String payee, String desc){
-        BillCard billCard = new BillCard("Payer: " + payer, "Payee: "+payee, "Desc: " + desc, "$"+amount, false);
+    private void addBillLocal(String payer, String amount, String payee, String desc, String uid, boolean isChecked){
+        BillCard billCard = new BillCard("Payer: " + payer, "Payee: "+payee, "Desc: " + desc, "$"+amount, uid,isChecked);
         cardList.add(0, billCard);
         adapter.notifyDataSetChanged();
     }
