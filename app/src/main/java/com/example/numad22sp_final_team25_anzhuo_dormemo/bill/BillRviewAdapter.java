@@ -30,6 +30,10 @@ public class BillRviewAdapter extends RecyclerView.Adapter<BillRviewHolder>{
         currentUserName = name;
     }
 
+    public String getCurrentUserName() {
+        return currentUserName;
+    }
+
     //This method will be called by the RecyclerView to obtain a ViewHolder object. It inflates the view hierarchy
     //xml file and creates an instance of our ViewHolder class initialized with the view hierarchy before
     //returning it to the RecyclerView

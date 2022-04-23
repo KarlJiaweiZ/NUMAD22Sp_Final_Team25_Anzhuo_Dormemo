@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -14,7 +15,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -22,10 +22,10 @@ import com.example.numad22sp_final_team25_anzhuo_dormemo.bill.BillCard;
 import com.example.numad22sp_final_team25_anzhuo_dormemo.bill.BillCardClickListener;
 import com.example.numad22sp_final_team25_anzhuo_dormemo.bill.BillRviewAdapter;
 import com.example.numad22sp_final_team25_anzhuo_dormemo.bill.FetchData;
-import com.google.android.gms.tasks.Tasks;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -34,6 +34,8 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Objects;
 
 public class BillFragment extends Fragment {
@@ -107,7 +109,62 @@ public class BillFragment extends Fragment {
         checkedRoommates = new boolean[100];
         selectedRoommatesIndex = new ArrayList<>();
 
-        //display bills from firebase
+//        //display bills from firebase
+//        dormRef.child(currentDormName).child("bills").addListenerForSingleValueEvent(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                if(snapshot.exists()){
+//                    for(DataSnapshot dataSnapshot : snapshot.getChildren()){
+//                        String payer = dataSnapshot.child("payer").getValue(String.class);
+//                        String payee = dataSnapshot.child("payee").getValue(String.class);
+//                        String amount = dataSnapshot.child("amount").getValue(String.class);
+//                        String desc = dataSnapshot.child("desc").getValue(String.class);
+//                        boolean isChecked = dataSnapshot.child("isChecked").getValue(boolean.class);
+//                        addBillLocal(payer, amount, payee, desc);
+//                    }
+//                }
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError error) {
+//
+//            }
+//        });
+
+        dormRef.child(currentDormName).child("bills").addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+                if(snapshot.exists()){
+                    Iterator iterator = snapshot.getChildren().iterator();
+                    String amount = (String) ((DataSnapshot)iterator.next()).getValue();
+                    String desc = (String) ((DataSnapshot)iterator.next()).getValue();
+                    boolean isChecked = (boolean) ((DataSnapshot)iterator.next()).getValue();
+                    String payee = (String) ((DataSnapshot)iterator.next()).getValue();
+                    String payer = (String) ((DataSnapshot)iterator.next()).getValue();
+                    addBillLocal(payer, amount, payee, desc);
+                }
+            }
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot snapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
 
         //part3. touch helper (minor task)
 //        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
@@ -233,7 +290,7 @@ public class BillFragment extends Fragment {
 
             @Override
             public void onCheckBoxClick(int position) {
-                //TODO: implement click gray
+                //TODO: update isChecked on database
                 cardList.get(position).onCheckBoxClick(position);
                 adapter.notifyItemChanged(position);
             }
@@ -299,22 +356,31 @@ public class BillFragment extends Fragment {
                             rm += ", ";
                     }
                     selectedRoommatesIndex.clear();
-                    addBill(0, amount, rm, desc);
+                    addBillToDB(amount, rm, desc);
                     dialog.dismiss();
                 }
             }
         });
     }
 
-    void addBill(int position, String amount, String payee, String desc) {
-        BillCard billCard = new BillCard("Payer: " + currentUserName, "Payee: "+payee, "Desc: " + desc, "$"+amount, false);
-        cardList.add(position, billCard);
-        saveBillToDB(billCard);
-        adapter.notifyDataSetChanged();
+    //upload this bill to firebase, under the specified dorm
+    private void addBillToDB(String amount, String payee, String desc) {
+        DatabaseReference dormBillRef = dormRef.child(currentDormName).child("bills");
+        String billKey = dormBillRef.push().getKey();
+        DatabaseReference dormBillKeyRef = dormBillRef.child(billKey);
+        HashMap<String, Object> billInfo = new HashMap<>();
+        billInfo.put("payer", adapter.getCurrentUserName());
+        billInfo.put("payee", payee);
+        billInfo.put("amount", amount);
+        billInfo.put("desc", desc);
+        billInfo.put("isChecked", false);
+        dormBillKeyRef.updateChildren(billInfo);
     }
 
-    private void saveBillToDB(BillCard billCard){
-
+    private void addBillLocal(String payer, String amount, String payee, String desc){
+        BillCard billCard = new BillCard("Payer: " + payer, "Payee: "+payee, "Desc: " + desc, "$"+amount, false);
+        cardList.add(0, billCard);
+        adapter.notifyDataSetChanged();
     }
 
 }
