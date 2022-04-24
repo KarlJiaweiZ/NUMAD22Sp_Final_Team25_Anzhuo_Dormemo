@@ -40,6 +40,9 @@ public class MessageViewHolder extends RecyclerView.ViewHolder {
 
     public void setProfileImage(Context context, String profileImage) {
         CircleImageView image = mView.findViewById(R.id.post_message_userimage);
+        if (profileImage == null || profileImage.isEmpty()) {
+            profileImage = "https://firebasestorage.googleapis.com/v0/b/numad22sp-final-dormemo.appspot.com/o/images%2Fdefault_avatar.png?alt=media&token=a92b6a69-cc1d-46dc-8c3e-b98b1fa4682a";
+        }
         Picasso.with(context).load(profileImage).into(image);
     }
 

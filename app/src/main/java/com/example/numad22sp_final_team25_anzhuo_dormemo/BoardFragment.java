@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -25,6 +26,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -56,16 +58,19 @@ public class BoardFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mAuth = FirebaseAuth.getInstance();
+        currentUserID = mAuth.getCurrentUser().getUid();
+        dbReference = FirebaseDatabase.getInstance();
+        init();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_board, container, false);
 
-        mAuth = FirebaseAuth.getInstance();
-        currentUserID = mAuth.getCurrentUser().getUid();
-        dbReference = FirebaseDatabase.getInstance();
-        getDormName();
+        messageRecords = new ArrayList<>();
+
+//        getAllMessages();
 
         BottomNavigationView bottomNavigationView = rootView.findViewById(R.id.bottom_navigation);
         bottomNavigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
@@ -92,7 +97,7 @@ public class BoardFragment extends Fragment {
         return rootView;
     }
 
-    private void getDormName() {
+    private void init() {
         dbReference.getReference().child("Users").child(currentUserID).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -105,6 +110,30 @@ public class BoardFragment extends Fragment {
                         currentUserProfileImage = "";
                     }
                     messageReference = dbReference.getReference().child("Dorms").child(currentDormName).child("Messages");
+                    messageReference.addChildEventListener(new ChildEventListener() {
+                        @Override
+                        public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+                            Messages newMessage = snapshot.getValue(Messages.class);
+                            messageRecords.add(0, newMessage);
+                            messageViewAdaptor.notifyItemInserted(0);
+                        }
+
+                        @Override
+                        public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+                        }
+
+                        @Override
+                        public void onChildRemoved(@NonNull DataSnapshot snapshot) {
+                        }
+
+                        @Override
+                        public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+                        }
+                    });
                 }
             }
 
@@ -118,9 +147,6 @@ public class BoardFragment extends Fragment {
         messageRecyclerView = rootView.findViewById(R.id.all_que_list);
         messageRecyclerView.bringToFront();
 
-        messageRecords = new ArrayList<>();
-        messageRecords.add(new Messages("message", "username", "uid", "https://firebasestorage.googleapis.com/v0/b/numad22sp-final-dormemo.appspot.com/o/images%2Fdefault_avatar.png?alt=media&token=a92b6a69-cc1d-46dc-8c3e-b98b1fa4682a", "time", "date"));
-
         messageRecyclerView.setHasFixedSize(true);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
         linearLayoutManager.setReverseLayout(true);
@@ -128,6 +154,35 @@ public class BoardFragment extends Fragment {
         messageViewAdaptor = new MessageViewAdaptor(messageRecords, getContext());
         messageRecyclerView.setAdapter(messageViewAdaptor);
         messageRecyclerView.setLayoutManager(linearLayoutManager);
+    }
+
+    private void getAllMessages() {
+//        Log.d("!!!!!!!!!!", currentDormName + "!!!");
+//        messageReference = dbReference.getReference().child("Dorms").child(currentDormName).child("Messages");
+        messageReference.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+                Messages newMessage = snapshot.getValue(Messages.class);
+                messageRecords.add(0, newMessage);
+                messageViewAdaptor.notifyItemInserted(0);
+            }
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot snapshot) {
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+            }
+        });
     }
 
     private void displayAddFrame(View rootView) {
