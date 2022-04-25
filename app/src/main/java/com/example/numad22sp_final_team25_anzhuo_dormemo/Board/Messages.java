@@ -1,5 +1,8 @@
 package com.example.numad22sp_final_team25_anzhuo_dormemo.Board;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+
 public class Messages {
     public String message;
     public String username;
@@ -7,15 +10,24 @@ public class Messages {
     public String profilePicture;
     public String time;
     public String date;
+    public String dormName;
+    public HashMap<String, Boolean> likes;
 
-    public Messages() {}
+    public Messages() {
+    }
 
-    public Messages(String message, String username, String uid, String profilePicture, String time, String date) {
+
+    public Messages(String message, String username, String uid, String profilePicture, String time, String date, String dormName) {
         this.message = message;
         this.username = username;
         this.uid = uid;
+        if (profilePicture == null || profilePicture.isEmpty()) {
+            profilePicture = "https://firebasestorage.googleapis.com/v0/b/numad22sp-final-dormemo.appspot.com/o/images%2Fdefault_avatar.png?alt=media&token=a92b6a69-cc1d-46dc-8c3e-b98b1fa4682a";
+        }
         this.profilePicture = profilePicture;
         this.time = time;
         this.date = date;
+        this.likes = new HashMap<>();
+        this.dormName = dormName;
     }
 }

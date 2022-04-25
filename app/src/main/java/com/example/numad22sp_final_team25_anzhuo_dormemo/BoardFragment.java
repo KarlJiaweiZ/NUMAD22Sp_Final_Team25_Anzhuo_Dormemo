@@ -35,6 +35,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Objects;
@@ -46,10 +47,10 @@ public class BoardFragment extends Fragment {
     private String currentUserID;
     private String currentDormName;
     private String currentUsername;
-    private String currentUserProfileImage;
+    private String currentUserProfileImage = "https://firebasestorage.googleapis.com/v0/b/numad22sp-final-dormemo.appspot.com/o/images%2Fdefault_avatar.png?alt=media&token=a92b6a69-cc1d-46dc-8c3e-b98b1fa4682a";
     private MessageViewAdaptor messageViewAdaptor;
     private RecyclerView messageRecyclerView;
-    private ArrayList<Messages> messageRecords;
+    private HashMap<String, Messages> messageRecords;
 
     public BoardFragment() {
         // Required empty public constructor
@@ -68,9 +69,7 @@ public class BoardFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_board, container, false);
 
-        messageRecords = new ArrayList<>();
-
-//        getAllMessages();
+        messageRecords = new HashMap<>();
 
         BottomNavigationView bottomNavigationView = rootView.findViewById(R.id.bottom_navigation);
         bottomNavigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
@@ -114,7 +113,7 @@ public class BoardFragment extends Fragment {
                         @Override
                         public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
                             Messages newMessage = snapshot.getValue(Messages.class);
-                            messageRecords.add(0, newMessage);
+                            messageRecords.put(snapshot.getKey(), newMessage);
                             messageViewAdaptor.notifyItemInserted(0);
                         }
 
@@ -154,35 +153,6 @@ public class BoardFragment extends Fragment {
         messageViewAdaptor = new MessageViewAdaptor(messageRecords, getContext());
         messageRecyclerView.setAdapter(messageViewAdaptor);
         messageRecyclerView.setLayoutManager(linearLayoutManager);
-    }
-
-    private void getAllMessages() {
-//        Log.d("!!!!!!!!!!", currentDormName + "!!!");
-//        messageReference = dbReference.getReference().child("Dorms").child(currentDormName).child("Messages");
-        messageReference.addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-                Messages newMessage = snapshot.getValue(Messages.class);
-                messageRecords.add(0, newMessage);
-                messageViewAdaptor.notifyItemInserted(0);
-            }
-
-            @Override
-            public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-            }
-
-            @Override
-            public void onChildRemoved(@NonNull DataSnapshot snapshot) {
-            }
-
-            @Override
-            public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-            }
-        });
     }
 
     private void displayAddFrame(View rootView) {
@@ -230,6 +200,8 @@ public class BoardFragment extends Fragment {
         hashmap.put("profilePicture", currentUserProfileImage);
         hashmap.put("date", getCurrentDate());
         hashmap.put("time", getCurrentTime());
+        hashmap.put("dormName", currentDormName);
+        hashmap.put("likes", new HashMap<String, Boolean>() {{put("dummy", true);}});
 
         messageReference.child(pushID).updateChildren(hashmap).addOnCompleteListener(new OnCompleteListener() {
             @Override
