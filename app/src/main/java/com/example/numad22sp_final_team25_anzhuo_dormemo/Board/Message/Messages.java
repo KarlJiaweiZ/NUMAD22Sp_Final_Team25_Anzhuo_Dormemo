@@ -1,4 +1,4 @@
-package com.example.numad22sp_final_team25_anzhuo_dormemo.Board;
+package com.example.numad22sp_final_team25_anzhuo_dormemo.Board.Message;
 
 import java.util.ArrayList;
 import java.util.HashMap;

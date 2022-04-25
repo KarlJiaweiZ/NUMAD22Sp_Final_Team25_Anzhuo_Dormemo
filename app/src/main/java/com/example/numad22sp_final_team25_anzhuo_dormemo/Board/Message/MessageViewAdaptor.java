@@ -1,16 +1,16 @@
-package com.example.numad22sp_final_team25_anzhuo_dormemo.Board;
+package com.example.numad22sp_final_team25_anzhuo_dormemo.Board.Message;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.util.Log;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.numad22sp_final_team25_anzhuo_dormemo.CommentsActivity;
 import com.example.numad22sp_final_team25_anzhuo_dormemo.R;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -26,8 +26,8 @@ public class MessageViewAdaptor extends RecyclerView.Adapter<MessageViewHolder> 
     public HashMap<String, Messages> messagesHashmap;
     public Context context;
 
-    public MessageViewAdaptor(HashMap<String, Messages> messagesArrayList, Context context) {
-        this.messagesHashmap = messagesArrayList;
+    public MessageViewAdaptor(HashMap<String, Messages> messagesHashmap, Context context) {
+        this.messagesHashmap = messagesHashmap;
         this.context = context;
     }
 
@@ -89,7 +89,11 @@ public class MessageViewAdaptor extends RecyclerView.Adapter<MessageViewHolder> 
         holder.commentButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                // start CommentsActivity
+                Intent commentsIntent = new Intent(context, CommentsActivity.class);
+                commentsIntent.putExtra("postKey", mid);
+                commentsIntent.putExtra("dormName", currentItem.dormName);
+                context.startActivity(commentsIntent);
             }
         });
     }

@@ -19,8 +19,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.example.numad22sp_final_team25_anzhuo_dormemo.Board.MessageViewAdaptor;
-import com.example.numad22sp_final_team25_anzhuo_dormemo.Board.Messages;
+import com.example.numad22sp_final_team25_anzhuo_dormemo.Board.Message.MessageViewAdaptor;
+import com.example.numad22sp_final_team25_anzhuo_dormemo.Board.Message.Messages;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -34,8 +34,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Objects;
@@ -106,7 +104,7 @@ public class BoardFragment extends Fragment {
                     try {
                         currentUserProfileImage = Objects.requireNonNull(snapshot.child("UserPic").getValue()).toString();
                     } catch (java.lang.NullPointerException e) {
-                        currentUserProfileImage = "";
+                        currentUserProfileImage = "https://firebasestorage.googleapis.com/v0/b/numad22sp-final-dormemo.appspot.com/o/images%2Fdefault_avatar.png?alt=media&token=a92b6a69-cc1d-46dc-8c3e-b98b1fa4682a";
                     }
                     messageReference = dbReference.getReference().child("Dorms").child(currentDormName).child("Messages");
                     messageReference.addChildEventListener(new ChildEventListener() {
