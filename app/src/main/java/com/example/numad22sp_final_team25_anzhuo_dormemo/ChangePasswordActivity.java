@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -44,7 +45,6 @@ public class ChangePasswordActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 mUpdatePassword(etOldPass.getText().toString(), etNewPass.getText().toString());
-                sendUserToMainActivity();
             }
         }
         );
@@ -62,7 +62,6 @@ public class ChangePasswordActivity extends AppCompatActivity {
 
     private void mUpdatePassword(String oldPass, String newPass) {
         //String email = currentUser.getEmail();
-        //currentEmail = "karlzhangjw@outlook.com";
         AuthCredential credential = EmailAuthProvider.getCredential(currentEmail, oldPass);
         // Prompt the user to re-provide their sign-in credentials
         currentUser.reauthenticate(credential).addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -74,6 +73,7 @@ public class ChangePasswordActivity extends AppCompatActivity {
                         public void onComplete(@NonNull Task<Void> task) {
                             if (task.isSuccessful()) {
                                 Log.d("MeFragment", "Password updated");
+                                sendUserToMainActivity();
                             } else {
                                 Log.d("MeFragment", "Error password not updated");
                             }
@@ -81,7 +81,6 @@ public class ChangePasswordActivity extends AppCompatActivity {
                     });
                 } else {
                     Log.d("MeFragment", "Error auth failed");
-
                 }
             }
         });

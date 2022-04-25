@@ -12,6 +12,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.NUMAD22Sp_Final_Team25_Anzhuo_Dormemo">
         <activity
+            android:name=".UploadImageActivity"
+            android:exported="false" />
+        <activity
             android:name=".ChangePasswordActivity"
             android:exported="false" />
         <activity

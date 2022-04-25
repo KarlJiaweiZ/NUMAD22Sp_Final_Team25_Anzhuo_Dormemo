@@ -38,14 +38,10 @@ import com.squareup.picasso.Picasso;
  */
 public class MeFragment extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
     private static final int PICK_IMAGE_REQUEST = 1;
 
     private View meFragmentView;
-    private String currentUserID, currentUserName, currentDormName, currentEmail, currentPass;
+    private String currentUserID, currentUserName, currentDormName, currentEmail;
 
     private ImageView userPicIV;
     private TextView userStatusTV;
@@ -53,13 +49,11 @@ public class MeFragment extends Fragment {
     private Button changePasswordButton;
     private Button changeDormNameButton;
     private Button logOutButton;
-    private EditText newPassET, oldPassET;
 
     private FirebaseUser currentUser;
     private FirebaseAuth firebaseAuth;
     private DatabaseReference usersRef, dormRef, groupMessageKeyRef;
     private StorageReference storageReference;
-    //private DatabaseReference getImage;
 
 
     public MeFragment() {
@@ -79,6 +73,11 @@ public class MeFragment extends Fragment {
     private void sendUserToMainActivity() {
         Intent mainIntent = new Intent(getActivity(), MainActivity.class);
         startActivity(mainIntent);
+    }
+
+    private void SendUserToUploadActivity() {
+        Intent uploadIntent = new Intent(getActivity(), UploadImageActivity.class);
+        startActivity(uploadIntent);
     }
 
     @Override
@@ -110,7 +109,7 @@ public class MeFragment extends Fragment {
         userPicIV.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                SendUserToUploadActivity();
             }
         });
         currentUserNameTV = (TextView) meFragmentView.findViewById(R.id.tvUserName);
@@ -118,11 +117,20 @@ public class MeFragment extends Fragment {
         changePasswordButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getContext(), ChangePasswordActivity.class);//might problem in getContext
+                Intent intent = new Intent(getContext(), ChangePasswordActivity.class);
                 intent.putExtra("EXTRA_current_Email", currentEmail);
                 startActivity(intent);
             }
         });
+
+        changeDormNameButton = (Button) meFragmentView.findViewById(R.id.buttonChangeDormName);
+        changeDormNameButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
+
         logOutButton = (Button) meFragmentView.findViewById(R.id.buttonLogOut);
         logOutButton.setOnClickListener(new View.OnClickListener() {
             @Override
