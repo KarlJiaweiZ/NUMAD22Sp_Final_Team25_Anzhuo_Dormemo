@@ -90,6 +90,7 @@ public class ChatMessagesAdapter extends RecyclerView.Adapter<ChatMessagesAdapte
                 if (snapshot.hasChild("Status")) {
                     String senderStatus = snapshot.child("Status").getValue().toString();
                     holder.receiverStatus.setText("- " + senderStatus);
+                    holder.receiverStatus.setVisibility(View.VISIBLE);
                 }
             }
             @Override
@@ -117,7 +118,6 @@ public class ChatMessagesAdapter extends RecyclerView.Adapter<ChatMessagesAdapte
         else{
             holder.receiverID.setVisibility(View.VISIBLE);
             holder.receiverMessageText.setVisibility(View.VISIBLE);
-            holder.receiverStatus.setVisibility(View.VISIBLE);
             holder.receiverMsgTime.setVisibility(View.VISIBLE);
             holder.receiverProfileImage.setVisibility(View.VISIBLE);
 
