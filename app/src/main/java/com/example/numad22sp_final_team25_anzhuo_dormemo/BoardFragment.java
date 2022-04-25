@@ -69,8 +69,6 @@ public class BoardFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_board, container, false);
 
-        messageRecords = new HashMap<>();
-
         BottomNavigationView bottomNavigationView = rootView.findViewById(R.id.bottom_navigation);
         bottomNavigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
             @Override
@@ -113,6 +111,7 @@ public class BoardFragment extends Fragment {
     }
 
     private void init() {
+        messageRecords = new HashMap<>();
         dbReference.getReference().child("Users").child(currentUserID).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
