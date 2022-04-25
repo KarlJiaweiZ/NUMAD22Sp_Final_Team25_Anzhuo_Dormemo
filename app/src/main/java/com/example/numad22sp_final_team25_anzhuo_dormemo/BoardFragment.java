@@ -15,6 +15,8 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -67,6 +69,9 @@ public class BoardFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_board, container, false);
 
+        // create dropdown menu
+        createDropdown(rootView);
+
         messageRecords = new HashMap<>();
 
         BottomNavigationView bottomNavigationView = rootView.findViewById(R.id.bottom_navigation);
@@ -78,10 +83,10 @@ public class BoardFragment extends Fragment {
                         displayMessagesFrame(rootView);
                         break;
                     case R.id.badd:
-                        displayAddFrame(rootView);
+                        displayAddMessageFrame(rootView);
                         break;
                     case R.id.bsearch:
-                        displaySearchFrame(rootView);
+                        displaySearchMessageFrame(rootView);
                         break;
                 }
                 return true;
@@ -92,6 +97,13 @@ public class BoardFragment extends Fragment {
         displayMessagesFrame(rootView);
 
         return rootView;
+    }
+
+    private void createDropdown(View view) {
+        String[] priorities = getResources().getStringArray(R.array.priority);
+        ArrayAdapter<String> itemsAdapter = new ArrayAdapter<String>(getContext(), R.layout.message_dropdown_item, priorities);
+        AutoCompleteTextView pv = (AutoCompleteTextView) view.findViewById(R.id.message_priority);
+        pv.setAdapter(itemsAdapter);
     }
 
     private void init() {
@@ -153,11 +165,15 @@ public class BoardFragment extends Fragment {
         messageRecyclerView.setLayoutManager(linearLayoutManager);
     }
 
-    private void displayAddFrame(View rootView) {
+    private void displayAddMessageFrame(View rootView) {
         rootView.findViewById(R.id.add_message_layout).bringToFront();
 
         // get text content
         EditText newMessage = rootView.findViewById(R.id.add_question_txt);
+
+        // get priority
+        AutoCompleteTextView priority = rootView.findViewById(R.id.message_priority);
+
         Button addButton = rootView.findViewById(R.id.add_question_btn);
         addButton.setOnClickListener(new View.OnClickListener() {
 
@@ -170,7 +186,7 @@ public class BoardFragment extends Fragment {
                         .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
-                                addNewMessage(newMessage.getText().toString());
+                                addNewMessage(newMessage.getText().toString(), priority.getText().toString());
                             }
                         })
                         .setNegativeButton("No", null)
@@ -179,12 +195,12 @@ public class BoardFragment extends Fragment {
         });
     }
 
-    private void displaySearchFrame(View rootView) {
+    private void displaySearchMessageFrame(View rootView) {
         rootView.findViewById(R.id.search_message_layout).bringToFront();
 
     }
 
-    private void addNewMessage(String newMessage) {
+    private void addNewMessage(String newMessage, String priority) {
         if (TextUtils.isEmpty(newMessage)) {
             Toast.makeText(getActivity(),"Message body cannot be empty.",Toast.LENGTH_LONG).show();
             return;
@@ -200,6 +216,7 @@ public class BoardFragment extends Fragment {
         hashmap.put("time", getCurrentTime());
         hashmap.put("dormName", currentDormName);
         hashmap.put("likes", new HashMap<String, Boolean>() {{put("dummy", true);}});
+        hashmap.put("priority", priority);
 
         messageReference.child(pushID).updateChildren(hashmap).addOnCompleteListener(new OnCompleteListener() {
             @Override

@@ -17,7 +17,7 @@
             android:layout_height="match_parent"
             android:background="@color/white" />
 
-        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        <LinearLayout
             android:id="@+id/add_message_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -31,7 +31,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginTop="5dp"
-                android:text="Add Question"
+                android:text="Add Message"
                 android:textSize="25sp"
                 android:textStyle="bold" />
 
@@ -44,8 +44,25 @@
                 android:paddingLeft="10dp"
                 android:layout_marginTop="10dp"
                 android:ems="10"
-                android:hint="Type your question here...."
+                android:hint="Type your message here...."
                 />
+
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                android:layout_width="match_parent"
+                android:hint="Message Importance"
+                app:startIconDrawable="@drawable/message_priority_icon"
+                android:layout_height="wrap_content">
+
+                <AutoCompleteTextView
+                    android:id="@+id/message_priority"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:inputType="none"
+                    android:text="High Priority" />
+
+            </com.google.android.material.textfield.TextInputLayout>
 
             <Button
                 android:id="@+id/add_question_btn"
@@ -110,7 +127,7 @@
                 android:layout_height="match_parent"
                 android:layout_alignParentLeft="true"
                 android:layout_margin="10dp"
-                android:layout_below="@id/myLayout">
+                android:layout_below="@+id/myLayout">
             </androidx.recyclerview.widget.RecyclerView>
 
 

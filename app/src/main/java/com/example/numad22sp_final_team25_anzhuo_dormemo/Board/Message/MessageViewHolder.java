@@ -12,6 +12,8 @@ import com.example.numad22sp_final_team25_anzhuo_dormemo.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.squareup.picasso.Picasso;
 
+import java.io.File;
+
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class MessageViewHolder extends RecyclerView.ViewHolder {
@@ -59,5 +61,20 @@ public class MessageViewHolder extends RecyclerView.ViewHolder {
     public void setDate(String date) {
         TextView tv = mView.findViewById(R.id.post_date);
         tv.setText(date);
+    }
+
+    public void setPriorityIcon(Context context, String priority) {
+        CircleImageView image = mView.findViewById(R.id.message_priority_icon);
+        switch (priority) {
+            case "High Priority":
+                Picasso.with(context).load(R.drawable.message_high_priority_icon).into(image);
+                break;
+            case "Medium Priority":
+                Picasso.with(context).load(R.drawable.message_medium_priority_icon).into(image);
+                break;
+            default:
+                Picasso.with(context).load(R.drawable.message_low_priority_icon).into(image);
+                break;
+        }
     }
 }

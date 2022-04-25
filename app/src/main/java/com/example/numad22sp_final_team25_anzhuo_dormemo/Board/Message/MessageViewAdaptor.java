@@ -49,6 +49,7 @@ public class MessageViewAdaptor extends RecyclerView.Adapter<MessageViewHolder> 
         holder.setPostAuthor(currentItem.username);
         holder.setTime(currentItem.time);
         holder.setDate(currentItem.date);
+        holder.setPriorityIcon(this.context, currentItem.priority);
 
         DatabaseReference likeReference = FirebaseDatabase.getInstance().getReference().child("Dorms").child(currentItem.dormName).child("Messages").child(mid).child("likes");
 

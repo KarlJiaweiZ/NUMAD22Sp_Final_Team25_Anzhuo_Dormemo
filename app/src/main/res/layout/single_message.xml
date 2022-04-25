@@ -29,16 +29,32 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
-                <TextView
-                    android:id="@+id/post_message_username"
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="3dp"
-                    android:layout_gravity="center_vertical"
-                    android:text="Username"
-                    android:textColor="#000000"
-                    android:textSize="13sp"
-                    android:textStyle="bold"/>
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal"
+                    android:layout_marginLeft="5dp"
+                    android:padding="3dp">
+
+                    <TextView
+                        android:id="@+id/post_message_username"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="3dp"
+                        android:layout_gravity="center_vertical"
+                        android:text="Username"
+                        android:textColor="#000000"
+                        android:textSize="13sp"
+                        android:textStyle="bold"/>
+
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:id="@+id/message_priority_icon"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:textAlignment="viewEnd"
+                        android:layout_marginLeft="4dp"/>
+
+                </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
