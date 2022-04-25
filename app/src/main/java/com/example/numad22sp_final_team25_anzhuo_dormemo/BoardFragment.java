@@ -51,6 +51,7 @@ public class BoardFragment extends Fragment {
     private MessageViewAdaptor messageViewAdaptor;
     private RecyclerView messageRecyclerView;
     private HashMap<String, Messages> messageRecords;
+    private View rootView;
 
     public BoardFragment() {
         // Required empty public constructor
@@ -62,15 +63,11 @@ public class BoardFragment extends Fragment {
         mAuth = FirebaseAuth.getInstance();
         currentUserID = mAuth.getCurrentUser().getUid();
         dbReference = FirebaseDatabase.getInstance();
-        init();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_board, container, false);
-
-        // create dropdown menu
-        createDropdown(rootView);
+        rootView = inflater.inflate(R.layout.fragment_board, container, false);
 
         messageRecords = new HashMap<>();
 
@@ -93,16 +90,25 @@ public class BoardFragment extends Fragment {
             }
         });
 
-        // default: display messages
-        displayMessagesFrame(rootView);
-
         return rootView;
     }
 
-    private void createDropdown(View view) {
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        // default: display messages
+        init();
+        displayMessagesFrame(rootView);
+
+        // create dropdown menu
+        createDropdown();
+    }
+
+    private void createDropdown() {
         String[] priorities = getResources().getStringArray(R.array.priority);
         ArrayAdapter<String> itemsAdapter = new ArrayAdapter<String>(getContext(), R.layout.message_dropdown_item, priorities);
-        AutoCompleteTextView pv = (AutoCompleteTextView) view.findViewById(R.id.message_priority);
+        AutoCompleteTextView pv = (AutoCompleteTextView) rootView.findViewById(R.id.message_priority);
         pv.setAdapter(itemsAdapter);
     }
 
