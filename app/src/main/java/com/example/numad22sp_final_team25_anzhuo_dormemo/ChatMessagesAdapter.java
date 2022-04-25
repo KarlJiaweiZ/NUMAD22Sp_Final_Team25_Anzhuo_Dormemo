@@ -123,7 +123,7 @@ public class ChatMessagesAdapter extends RecyclerView.Adapter<ChatMessagesAdapte
 
             holder.receiverID.setText(messages.getUserName());
             holder.receiverMessageText.setBackgroundResource(R.drawable.chat_messages_layout);
-            holder.receiverMessageText.setTextColor(Color.BLACK);
+            holder.receiverMessageText.setTextColor(Color.WHITE);
             holder.receiverMessageText.setText(messages.getMessage());
             holder.receiverMsgTime.setText(messages.getDate() + " " + messages.getTime());
         }
