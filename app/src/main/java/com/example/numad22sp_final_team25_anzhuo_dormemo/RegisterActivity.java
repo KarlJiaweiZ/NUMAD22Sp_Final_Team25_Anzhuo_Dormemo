@@ -44,6 +44,7 @@ public class RegisterActivity extends AppCompatActivity {
 
     private boolean registerStatus;
     private boolean hasDorm;
+    private boolean hasName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -101,17 +102,22 @@ public class RegisterActivity extends AppCompatActivity {
         String password = userPassword.getText().toString();
         String username = userName.getText().toString();
         String dormname = dormName.getText().toString();
+
         if(TextUtils.isEmpty(email)){
             Toast.makeText(this, "Please enter email",Toast.LENGTH_SHORT).show();
         }
-        if(TextUtils.isEmpty(password)){
+        else if(TextUtils.isEmpty(password)){
             Toast.makeText(this, "Please enter password",Toast.LENGTH_SHORT).show();
         }
-        if(TextUtils.isEmpty(username)){
+        else if(TextUtils.isEmpty(username)){
             Toast.makeText(this, "Please enter username",Toast.LENGTH_SHORT).show();
         }
-        if(TextUtils.isEmpty(dormname)){
+        else if(TextUtils.isEmpty(dormname)){
             Toast.makeText(this, "Please enter dorm name",Toast.LENGTH_SHORT).show();
+        }
+        else if(hasName){
+            Toast.makeText(this, "User Name has been taken, please input another name",Toast.LENGTH_SHORT).show();
+            hasName = false;
         }
         else {
             progressBar.setVisibility(View.VISIBLE);
@@ -165,23 +171,49 @@ public class RegisterActivity extends AppCompatActivity {
                         if (temp_dormname.equals(dormname)) {
                             hasDorm = true;
                         }
-                        Log.e("Dorm:", temp_dormname);
+                        //Log.e("Dorm:", temp_dormname);
                     }
                     if(dormLeaderCheck.isChecked() && hasDorm){
                         //notice user that this dorm name is taken
-                        Toast.makeText(RegisterActivity.this, "This dorm name has been token, please rename.", Toast.LENGTH_LONG).show();
+                        Toast.makeText(RegisterActivity.this, "This dorm name has been taken, please rename.", Toast.LENGTH_LONG).show();
                     }else if(dormLeaderCheck.isChecked() && !hasDorm){
                         //create account as dorm leader
-                        createNewAccount();
+                        checkUsernameDup();
                     }else if(!dormLeaderCheck.isChecked() && hasDorm){
                         //create account as dorm member
-                        createNewAccount();
+                        checkUsernameDup();
                     }else{
                         //notice user this dorm does not exist
                         Toast.makeText(RegisterActivity.this, "Dorm does not exist, please enter a valid name or be the leader.", Toast.LENGTH_LONG).show();
                     }
                 }
             }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
+    private void checkUsernameDup(){
+        String username = userName.getText().toString();
+        DatabaseReference existedUsers = databaseReference.child("Users");
+        existedUsers.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for(DataSnapshot dataSnapshot : snapshot.getChildren()){
+                    if(username.equals(dataSnapshot.child("Username").getValue().toString())){
+                        hasName = true;
+                        Log.d("username",dataSnapshot.child("Username").getValue().toString());
+                    }
+                }
+                if(hasName){
+                    Toast.makeText(RegisterActivity.this, "User name has been taken, enter another one.", Toast.LENGTH_LONG).show();
+                }else{
+                    createNewAccount();
+                }
+            }
+
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
 

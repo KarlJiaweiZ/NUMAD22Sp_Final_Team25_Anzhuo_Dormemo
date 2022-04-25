@@ -28,7 +28,7 @@ public class MainActivity extends AppCompatActivity {
     private ViewPager myViewPager;
     private TabLayout myTabLayout;
     private TabAccessorAdapter mytabAccessorAdapter;
-    private String dormName;
+    public static String dormName;
 
     private FirebaseUser currentUser;
     private FirebaseAuth firebaseAuth;
