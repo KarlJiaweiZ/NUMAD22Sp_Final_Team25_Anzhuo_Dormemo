@@ -10,6 +10,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.SimpleItemAnimator;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -298,7 +299,7 @@ public class BillFragment extends Fragment {
             public void onCheckBoxClick(int position) {
                 BillCard billCard = cardList.get(position);
                 billCard.onCheckBoxClick(position);
-                adapter.notifyDataSetChanged();
+                adapter.notifyItemChanged(position);
                 String billId = billCard.getUid();
                 dormRef.child(currentDormName).child("bills").child(billId).child("isChecked").setValue(billCard.isChecked());
             }
@@ -389,7 +390,7 @@ public class BillFragment extends Fragment {
     private void addBillLocal(String payer, String amount, String payee, String desc, String uid, boolean isChecked){
         BillCard billCard = new BillCard("Payer: " + payer, payee, "Desc: " + desc, "$"+amount, uid,isChecked);
         cardList.add(0, billCard);
-        adapter.notifyDataSetChanged();
+        adapter.notifyItemChanged(0);
     }
 
 }
