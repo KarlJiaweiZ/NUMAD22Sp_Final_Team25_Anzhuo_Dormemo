@@ -3,9 +3,11 @@ package com.example.numad22sp_final_team25_anzhuo_dormemo;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -110,5 +112,15 @@ public class LoginActivity extends AppCompatActivity {
                         }
                     });
         }
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if(keyCode == KeyEvent.KEYCODE_BACK){
+            this.finishAffinity();
+            //System.exit(0);
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
     }
 }
