@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/bforum"
+        android:icon="@drawable/message_forum_icon"
+
+        android:title="Board"/>
+    <item
+        android:id="@+id/badd"
+        android:icon="@drawable/message_add_message_icon"
+        android:title="Add Message"/>
+    <item
+        android:id="@+id/bsearch"
+        android:icon="@drawable/message_search_icon"
+        android:title="Search"/>
+</menu>

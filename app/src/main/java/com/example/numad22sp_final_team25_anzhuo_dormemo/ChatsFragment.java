@@ -105,7 +105,7 @@ public class ChatsFragment extends Fragment {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if(dataSnapshot.exists()){
                     currentDormName = dataSnapshot.getValue(String.class);
-                    Toast.makeText(getActivity(),"current"+currentDormName,Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(getActivity(),"current"+currentDormName,Toast.LENGTH_SHORT).show();
                     dormRef.child(currentDormName).child("Chats").addChildEventListener(new ChildEventListener() {
                         @Override
                         public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
