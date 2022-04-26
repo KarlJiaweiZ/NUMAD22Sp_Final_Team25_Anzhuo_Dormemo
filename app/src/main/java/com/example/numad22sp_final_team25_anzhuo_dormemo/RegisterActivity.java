@@ -133,6 +133,7 @@ public class RegisterActivity extends AppCompatActivity {
                                 databaseReference.child("Users").child(currentUserID).child("Password").setValue(password);
                                 databaseReference.child("Users").child(currentUserID).child("Username").setValue(username);
                                 databaseReference.child("Users").child(currentUserID).child("DormName").setValue(dormname);
+                                databaseReference.child("Users").child(currentUserID).child("UserPic").setValue("https://firebasestorage.googleapis.com/v0/b/numad22sp-final-dormemo.appspot.com/o/images%2Fdefault_avatar.png?alt=media&token=a92b6a69-cc1d-46dc-8c3e-b98b1fa4682a");
                                 //Dorm Part
                                 if(dormLeaderCheck.isChecked()){
                                     //to be the leader
