@@ -73,39 +73,16 @@ public class ChatsFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-    }
-
-    private void SendUserToLoginActivity() {
-        Intent loginIntent = new Intent(getActivity(), LoginActivity.class);
-        startActivity(loginIntent);
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        chatsFragmentView = inflater.inflate(R.layout.fragment_chats, container, false);
-
-
         firebaseAuth = FirebaseAuth.getInstance();
         currentUser = firebaseAuth.getCurrentUser();
-        if(currentUser == null || Objects.isNull(currentUser)){
-            SendUserToLoginActivity();
-        }
         usersRef = FirebaseDatabase.getInstance().getReference().child("Users");
-        dormRef = FirebaseDatabase.getInstance().getReference().child("Dorms");
-        initializeFields();
         usersRef.child(currentUser.getUid()).child("DormName").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if(dataSnapshot.exists()){
                     currentDormName = dataSnapshot.getValue(String.class);
 //                    Toast.makeText(getActivity(),"current"+currentDormName,Toast.LENGTH_SHORT).show();
+
                     dormRef.child(currentDormName).child("Chats").addChildEventListener(new ChildEventListener() {
                         @Override
                         public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
@@ -115,11 +92,6 @@ public class ChatsFragment extends Fragment {
                             chatMessagesList.add(messages);
                             messageAdapter.notifyDataSetChanged();
                             linearLayoutManager.scrollToPosition(chatMessagesList.size()-1);
-                            //ChatMessages messages = snapshot.getValue(ChatMessages.class);
-                            //chatMessagesList.add(messages);
-                            //messageAdapter.notifyDataSetChanged();
-                            //chatMessagesList.smoothScrollToPosition(chatMessagesList.size());
-
                         }
 
                         @Override
@@ -154,6 +126,33 @@ public class ChatsFragment extends Fragment {
                 Log.d("ChatsFragment", "currentDormName is null");
             }
         });
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+    }
+
+    private void SendUserToLoginActivity() {
+        Intent loginIntent = new Intent(getActivity(), LoginActivity.class);
+        startActivity(loginIntent);
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        chatsFragmentView = inflater.inflate(R.layout.fragment_chats, container, false);
+
+
+
+        if(currentUser == null || Objects.isNull(currentUser)){
+            SendUserToLoginActivity();
+        }
+        dormRef = FirebaseDatabase.getInstance().getReference().child("Dorms");
+        initializeFields();
+
         currentUserID = firebaseAuth.getCurrentUser().getUid();
 
         getUserInfo();
