@@ -53,7 +53,7 @@
                 android:layout_marginTop="10dp"
                 android:layout_marginRight="10dp"
                 android:background="@drawable/inputs"
-                android:hint="Password"
+                android:hint="Password (at least 6 characters)"
                 android:inputType="textPassword"
                 android:padding="15dp"></EditText>
 
@@ -67,7 +67,7 @@
                 android:layout_marginTop="10dp"
                 android:layout_marginRight="10dp"
                 android:background="@drawable/inputs"
-                android:hint="User name"
+                android:hint="User Name"
                 android:inputType="text"
                 android:padding="15dp"></EditText>
 
@@ -81,7 +81,7 @@
                 android:layout_marginTop="15dp"
                 android:layout_marginRight="10dp"
                 android:background="@drawable/inputs"
-                android:hint="Dorm number"
+                android:hint="Dorm Number"
                 android:inputType="text"
                 android:padding="15dp"></EditText>
 

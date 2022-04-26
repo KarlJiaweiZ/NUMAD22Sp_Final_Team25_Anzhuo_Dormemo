@@ -6,7 +6,10 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import android.os.Message;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -15,6 +18,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -32,10 +36,12 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Iterator;
-
+import java.util.List;
+import java.util.Objects;
 /**
  * A simple {@link Fragment} subclass.
  * create an instance of this fragment.
@@ -53,6 +59,11 @@ public class ChatsFragment extends Fragment {
     private FirebaseUser currentUser;
     private FirebaseAuth firebaseAuth;
     private DatabaseReference usersRef, dormRef, groupMessageKeyRef;
+
+    private List<ChatMessages> chatMessagesList = new ArrayList<>();
+    private LinearLayoutManager linearLayoutManager;
+    private ChatMessagesAdapter messageAdapter;
+    private RecyclerView userMessageList;
 
 
     public ChatsFragment() {
@@ -83,30 +94,38 @@ public class ChatsFragment extends Fragment {
 
         firebaseAuth = FirebaseAuth.getInstance();
         currentUser = firebaseAuth.getCurrentUser();
-        if(currentUser == null){
+        if(currentUser == null || Objects.isNull(currentUser)){
             SendUserToLoginActivity();
         }
         usersRef = FirebaseDatabase.getInstance().getReference().child("Users");
         dormRef = FirebaseDatabase.getInstance().getReference().child("Dorms");
-
+        initializeFields();
         usersRef.child(currentUser.getUid()).child("DormName").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if(dataSnapshot.exists()){
                     currentDormName = dataSnapshot.getValue(String.class);
-                    Toast.makeText(getActivity(),"current"+currentDormName,Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(getActivity(),"current"+currentDormName,Toast.LENGTH_SHORT).show();
                     dormRef.child(currentDormName).child("Chats").addChildEventListener(new ChildEventListener() {
                         @Override
                         public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-                            if (snapshot.exists()) {
-                                displayMessage(snapshot);
-                            }
+                            //displayMessage(snapshot);
+
+                            ChatMessages messages = snapshot.getValue(ChatMessages.class);
+                            chatMessagesList.add(messages);
+                            messageAdapter.notifyDataSetChanged();
+                            linearLayoutManager.scrollToPosition(chatMessagesList.size()-1);
+                            //ChatMessages messages = snapshot.getValue(ChatMessages.class);
+                            //chatMessagesList.add(messages);
+                            //messageAdapter.notifyDataSetChanged();
+                            //chatMessagesList.smoothScrollToPosition(chatMessagesList.size());
+
                         }
 
                         @Override
                         public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
                             if (snapshot.exists()) {
-                                displayMessage(snapshot);
+
                             }
                         }
 
@@ -139,14 +158,14 @@ public class ChatsFragment extends Fragment {
 
         getUserInfo();
 
-        initializeFields();
+
         sendMessageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 saveMessagesToDatabase();
                 userSendMessage.setText("");
 
-                scrollView.fullScroll(ScrollView.FOCUS_DOWN);
+                //scrollView.fullScroll(ScrollView.FOCUS_DOWN);
             }
         });
 
@@ -157,8 +176,14 @@ public class ChatsFragment extends Fragment {
     private void initializeFields() {
         userSendMessage = (EditText) chatsFragmentView.findViewById(R.id.chat_input_message);
         sendMessageButton = (ImageButton) chatsFragmentView.findViewById(R.id.chat_send_message_button);
-        groupChatTextDisplay = (TextView) chatsFragmentView.findViewById(R.id.chat_text_display);
-        scrollView = (ScrollView) chatsFragmentView.findViewById(R.id.chat_scrollview);
+        //groupChatTextDisplay = (TextView) chatsFragmentView.findViewById(R.id.chat_text_display);
+        //scrollView = (ScrollView) chatsFragmentView.findViewById(R.id.chat_scrollview);
+        messageAdapter = new ChatMessagesAdapter(chatMessagesList);
+        userMessageList = (RecyclerView) chatsFragmentView.findViewById(R.id.message_lists_recycler_view);
+        linearLayoutManager = new LinearLayoutManager(this.getActivity());
+        userMessageList.setLayoutManager(linearLayoutManager);
+        userMessageList.setAdapter(messageAdapter);
+
     }
 
     private void getUserInfo() {
@@ -200,15 +225,17 @@ public class ChatsFragment extends Fragment {
             groupMessageKeyRef = dormMessageRef.child(messageKey);
 
             HashMap<String, Object> messageInfoMap = new HashMap<>();
-            messageInfoMap.put("User name", currentUserName);
+            messageInfoMap.put("UserName", currentUserName);
             messageInfoMap.put("Message", message);
             messageInfoMap.put("Date", currentDate);
             messageInfoMap.put("Time", currentTime);
+            messageInfoMap.put("UserID", currentUserID);
             groupMessageKeyRef.updateChildren(messageInfoMap);
         }
     }
 
     private void displayMessage(DataSnapshot dataSnapshot) {
+        /*
         Iterator iterator = dataSnapshot.getChildren().iterator();
         while(iterator.hasNext()){
             String chatDate = (String) ((DataSnapshot)iterator.next()).getValue();
@@ -218,5 +245,9 @@ public class ChatsFragment extends Fragment {
 
             groupChatTextDisplay.append(chatUserName + " :\n" + chatMessage + "\n" + chatTime + "\n" + chatDate + "\n\n");
         }
+        */
+
+
+
     }
 }

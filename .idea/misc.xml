@@ -3,21 +3,21 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
-        <entry key="..\:/Users/93934/AndroidStudioProjects/NUMAD22Sp_Team25/app/src/main/res/layout/activity_login.xml" value="0.20742753623188406" />
-        <entry key="..\:/Users/93934/AndroidStudioProjects/NUMAD22Sp_Team25/app/src/main/res/layout/fragment_me.xml" value="0.20742753623188406" />
-        <entry key="app/src/main/res/layout/activity_homepage.xml" value="0.32686767578125" />
-        <entry key="app/src/main/res/layout/activity_main.xml" value="0.1" />
-        <entry key="app/src/main/res/layout/activity_new_sticker.xml" value="0.1" />
-        <entry key="app/src/main/res/layout/activity_receive_notification.xml" value="0.12537993920972645" />
-        <entry key="app/src/main/res/layout/activity_sticker_records.xml" value="0.1" />
-        <entry key="app/src/main/res/layout/activity_sticker_records_card.xml" value="0.1" />
-        <entry key="app/src/main/res/layout/activity_testdb.xml" value="0.17967987060546875" />
-        <entry key="app/src/main/res/layout/actvity_sticker_records_holder.xml" value="0.16802536231884058" />
-        <entry key="app/src/main/res/layout/acvitity_login.xml" value="0.1" />
-        <entry key="app/src/main/res/layout/spinner_card.xml" value="0.1598731884057971" />
-        <entry key="app/src/main/res/layout/spinner_manager.xml" value="0.1" />
-        <entry key="app/src/main/res/layout/sticker_records_card.xml" value="0.3511856079101563" />
-        <entry key="app/src/main/res/layout/sticker_window.xml" value="0.1598731884057971" />
+        <entry key="..\:/Downloads/NUMAD22Sp_Final_Team25_Anzhuo_Dormemo/app/src/main/res/layout/activity_main.xml" value="0.3619791666666667" />
+        <entry key="..\:/Downloads/NUMAD22Sp_Final_Team25_Anzhuo_Dormemo/app/src/main/res/layout/app_bar_layout.xml" value="0.3619791666666667" />
+        <entry key="..\:/Users/93934/AndroidStudioProjects/NUMAD22Sp_Team25/app/src/main/res/drawable/buttons.xml" value="0.215" />
+        <entry key="..\:/Users/93934/AndroidStudioProjects/NUMAD22Sp_Team25/app/src/main/res/layout/activity_change_password.xml" value="0.3625" />
+        <entry key="..\:/Users/93934/AndroidStudioProjects/NUMAD22Sp_Team25/app/src/main/res/layout/activity_login.xml" value="0.3625" />
+        <entry key="..\:/Users/93934/AndroidStudioProjects/NUMAD22Sp_Team25/app/src/main/res/layout/activity_upload_image.xml" value="0.268" />
+        <entry key="..\:/Users/LZS/AndroidStudioProjects/NUMAD22Sp_Final_Team25_Anzhuo_Dormemo/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.279" />
+        <entry key="..\:/Users/LZS/AndroidStudioProjects/NUMAD22Sp_Final_Team25_Anzhuo_Dormemo/app/src/main/res/drawable/buttons.xml" value="0.279" />
+        <entry key="..\:/Users/LZS/AndroidStudioProjects/NUMAD22Sp_Final_Team25_Anzhuo_Dormemo/app/src/main/res/drawable/dormemo_logo_foreground.xml" value="0.279" />
+        <entry key="..\:/Users/LZS/AndroidStudioProjects/NUMAD22Sp_Final_Team25_Anzhuo_Dormemo/app/src/main/res/drawable/inputs.xml" value="0.279" />
+        <entry key="..\:/Users/LZS/AndroidStudioProjects/NUMAD22Sp_Final_Team25_Anzhuo_Dormemo/app/src/main/res/layout/activity_login.xml" value="0.25815217391304346" />
+        <entry key="..\:/Users/LZS/AndroidStudioProjects/NUMAD22Sp_Final_Team25_Anzhuo_Dormemo/app/src/main/res/layout/activity_main.xml" value="0.27447916666666666" />
+        <entry key="..\:/Users/LZS/AndroidStudioProjects/NUMAD22Sp_Final_Team25_Anzhuo_Dormemo/app/src/main/res/layout/activity_register.xml" value="0.27447916666666666" />
+        <entry key="..\:/Users/LZS/AndroidStudioProjects/NUMAD22Sp_Final_Team25_Anzhuo_Dormemo/app/src/main/res/layout/app_bar_layout.xml" value="0.3333333333333333" />
+        <entry key="..\:/Users/LZS/AndroidStudioProjects/NUMAD22Sp_Final_Team25_Anzhuo_Dormemo/app/src/main/res/layout/fragment_bill.xml" value="0.25815217391304346" />
       </map>
     </option>
   </component>
