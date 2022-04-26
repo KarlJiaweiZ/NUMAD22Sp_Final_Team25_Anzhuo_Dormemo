@@ -56,7 +56,6 @@ public class LoginActivity extends AppCompatActivity {
     }
 
 
-
     private void initializeFields() {
         loginButton = (Button) findViewById(R.id.login_button);
         userEmail = (EditText) findViewById(R.id.login_email);
@@ -69,7 +68,7 @@ public class LoginActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
 
-        if(currentUser != null){
+        if (currentUser != null) {
             sendUserToMainActivity();
         }
     }
@@ -81,7 +80,7 @@ public class LoginActivity extends AppCompatActivity {
         finish();
     }
 
-    private void sendUserToRegisterActivity(){
+    private void sendUserToRegisterActivity() {
         Intent registerIntent = new Intent(LoginActivity.this, RegisterActivity.class);
         startActivity(registerIntent);
     }
@@ -89,24 +88,21 @@ public class LoginActivity extends AppCompatActivity {
     private void allowLogin() {
         String email = userEmail.getText().toString();
         String password = userPassword.getText().toString();
-        if(TextUtils.isEmpty(email)){
-            Toast.makeText(this, "Please enter email",Toast.LENGTH_SHORT).show();
-        }
-        if(TextUtils.isEmpty(password)){
-            Toast.makeText(this, "Please enter password",Toast.LENGTH_SHORT).show();
-        }
-        else{
+        if (TextUtils.isEmpty(email)) {
+            Toast.makeText(this, "Please enter email", Toast.LENGTH_SHORT).show();
+        } else if (TextUtils.isEmpty(password)) {
+            Toast.makeText(this, "Please enter password", Toast.LENGTH_SHORT).show();
+        } else {
             progressBar.setVisibility(View.VISIBLE);
             firebaseAuth.signInWithEmailAndPassword(email, password)
                     .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
-                            if(task.isSuccessful()){
+                            if (task.isSuccessful()) {
                                 sendUserToMainActivity();
                                 Toast.makeText(LoginActivity.this, "Login successful", Toast.LENGTH_SHORT).show();
                                 progressBar.setVisibility(View.GONE);
-                            }
-                            else{
+                            } else {
                                 String message = task.getException().toString();
                                 Toast.makeText(LoginActivity.this, "Error" + message, Toast.LENGTH_SHORT).show();
                                 progressBar.setVisibility(View.GONE);
