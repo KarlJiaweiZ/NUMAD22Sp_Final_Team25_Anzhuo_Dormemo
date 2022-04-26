@@ -18,9 +18,10 @@ public class LaunchActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_launch);
 
         new Handler().postDelayed(new Runnable() {
-            @Override
+            @Overridefeng
             public void run() {
                 startActivity(new Intent(LaunchActivity.this, MainActivity.class));
                 finish();
@@ -28,8 +29,6 @@ public class LaunchActivity extends AppCompatActivity {
                 FirebaseUser currentUser = firebaseAuth.getCurrentUser();
                 if(currentUser == null || Objects.isNull(currentUser)){
                     SendUserToLoginActivity();
-                } else {
-                    setContentView(R.layout.activity_launch);
                 }
             }
         }, 1000);
