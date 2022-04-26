@@ -45,7 +45,7 @@ public class MessageViewHolder extends RecyclerView.ViewHolder {
         if (profileImage == null || profileImage.isEmpty()) {
             profileImage = "https://firebasestorage.googleapis.com/v0/b/numad22sp-final-dormemo.appspot.com/o/images%2Fdefault_avatar.png?alt=media&token=a92b6a69-cc1d-46dc-8c3e-b98b1fa4682a";
         }
-        Picasso.with(context).load(profileImage).into(image);
+        Picasso.get().load(profileImage).into(image);
     }
 
     public void setMessage(String message) {
@@ -67,13 +67,13 @@ public class MessageViewHolder extends RecyclerView.ViewHolder {
         CircleImageView image = mView.findViewById(R.id.message_priority_icon);
         switch (priority) {
             case "High Priority":
-                Picasso.with(context).load(R.drawable.message_high_priority_icon).into(image);
+                Picasso.get().load(R.drawable.message_high_priority_icon).into(image);
                 break;
             case "Medium Priority":
-                Picasso.with(context).load(R.drawable.message_medium_priority_icon).into(image);
+                Picasso.get().load(R.drawable.message_medium_priority_icon).into(image);
                 break;
             default:
-                Picasso.with(context).load(R.drawable.message_low_priority_icon).into(image);
+                Picasso.get().load(R.drawable.message_low_priority_icon).into(image);
                 break;
         }
     }

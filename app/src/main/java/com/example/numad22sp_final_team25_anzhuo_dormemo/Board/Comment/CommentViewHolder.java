@@ -42,6 +42,6 @@ public class CommentViewHolder extends RecyclerView.ViewHolder {
 
     public void setProfileImage(Context context, String profileImage) {
         CircleImageView imageView = mView.findViewById(R.id.post_comment_image);
-        Picasso.with(context).load(profileImage).into(imageView);
+        Picasso.get().load(profileImage).into(imageView);
     }
 }
