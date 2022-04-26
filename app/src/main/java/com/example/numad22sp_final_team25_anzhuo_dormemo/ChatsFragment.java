@@ -41,7 +41,7 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-
+import java.util.Objects;
 /**
  * A simple {@link Fragment} subclass.
  * create an instance of this fragment.
@@ -94,7 +94,7 @@ public class ChatsFragment extends Fragment {
 
         firebaseAuth = FirebaseAuth.getInstance();
         currentUser = firebaseAuth.getCurrentUser();
-        if(currentUser == null){
+        if(currentUser == null || Objects.isNull(currentUser)){
             SendUserToLoginActivity();
         }
         usersRef = FirebaseDatabase.getInstance().getReference().child("Users");
