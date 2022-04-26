@@ -21,7 +21,7 @@ public class LaunchActivity extends AppCompatActivity {
         setContentView(R.layout.activity_launch);
 
         new Handler().postDelayed(new Runnable() {
-            @Overridefeng
+            @Override
             public void run() {
                 startActivity(new Intent(LaunchActivity.this, MainActivity.class));
                 finish();
