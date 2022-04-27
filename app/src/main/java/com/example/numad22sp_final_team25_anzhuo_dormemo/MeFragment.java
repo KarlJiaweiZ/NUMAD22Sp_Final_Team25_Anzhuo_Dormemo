@@ -3,6 +3,7 @@ package com.example.numad22sp_final_team25_anzhuo_dormemo;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -19,6 +20,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.EmailAuthProvider;
@@ -41,7 +44,7 @@ public class MeFragment extends Fragment {
     private static final int PICK_IMAGE_REQUEST = 1;
 
     private View meFragmentView;
-    private String currentUserID, currentUserName, currentDormName, currentEmail;
+    private String currentEmail;
 
     private ImageView userPicIV;
     private TextView userStatusTV;
@@ -52,7 +55,7 @@ public class MeFragment extends Fragment {
 
     private FirebaseUser currentUser;
     private FirebaseAuth firebaseAuth;
-    private DatabaseReference usersRef, dormRef, groupMessageKeyRef;
+    private DatabaseReference usersRef;
     private StorageReference storageReference;
 
 
@@ -93,12 +96,10 @@ public class MeFragment extends Fragment {
             SendUserToLoginActivity();
         }
         usersRef = FirebaseDatabase.getInstance().getReference().child("Users");
-        dormRef = FirebaseDatabase.getInstance().getReference().child("Dorms");
 
         if(currentUser == null){
             SendUserToLoginActivity();
         }
-
         initializeFields();
         retrieveUserInfo();
         return meFragmentView;
@@ -150,9 +151,22 @@ public class MeFragment extends Fragment {
                     //currentPass = snapshot.child("Password").getValue().toString();
                     String retrieveUsername = snapshot.child("Username").getValue().toString();
                     currentUserNameTV.setText(retrieveUsername);
-                    String imageUri = snapshot.child("UserPic").getValue().toString();
-                    Picasso.get().load(imageUri).into(userPicIV);
-
+                    String gsUrl = snapshot.child("UserPic").getValue().toString();
+                    StorageReference gsReference = FirebaseStorage.getInstance().getReferenceFromUrl(gsUrl);
+                    final Uri[] downloadUri = new Uri[1];
+                    gsReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                        @Override
+                        public void onSuccess(Uri uri) {
+                            // Got the download URL for 'users/me/profile.png'
+                            downloadUri[0] = uri;
+                            Picasso.get().load(downloadUri[0]).into(userPicIV);
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Log.d("MeFragment", "download uri wrong");
+                        }
+                    });
 
 
                 } else {
@@ -167,5 +181,6 @@ public class MeFragment extends Fragment {
         });
 
     }
+
 
 }

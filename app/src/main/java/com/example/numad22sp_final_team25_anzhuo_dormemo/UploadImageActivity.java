@@ -19,6 +19,8 @@ import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
@@ -27,6 +29,8 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.StorageTask;
 import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
+
+import java.util.HashMap;
 
 
 public class UploadImageActivity extends AppCompatActivity {
@@ -45,12 +49,24 @@ public class UploadImageActivity extends AppCompatActivity {
     private StorageReference mStorageRef;
     private DatabaseReference mDatabaseRef;
 
+    private FirebaseUser currentUser;
+    private FirebaseAuth firebaseAuth;
+    private DatabaseReference usersRef;
+
     private StorageTask mUploadTask;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_upload_image);
+
+        firebaseAuth = FirebaseAuth.getInstance();
+        currentUser = firebaseAuth.getCurrentUser();
+
+        if(currentUser == null){
+            SendUserToLoginActivity();
+        }
+        usersRef = FirebaseDatabase.getInstance().getReference().child("Users");
 
         mButtonChooseImage = findViewById(R.id.button_choose_image);
         mButtonUpload = findViewById(R.id.button_upload);
@@ -76,6 +92,7 @@ public class UploadImageActivity extends AppCompatActivity {
                     Toast.makeText(UploadImageActivity.this, "Upload in progress", Toast.LENGTH_SHORT).show();
                 } else {
                     uploadFile();
+                    sendUserToMainActivity();
                 }
             }
         });
@@ -86,6 +103,16 @@ public class UploadImageActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    private void SendUserToLoginActivity() {
+        Intent loginIntent = new Intent(UploadImageActivity.this, LoginActivity.class);
+        startActivity(loginIntent);
+    }
+
+    private void sendUserToMainActivity() {
+        Intent mainIntent = new Intent(UploadImageActivity.this, MainActivity.class);
+        startActivity(mainIntent);
     }
 
     private void openFileChooser() {
@@ -104,6 +131,7 @@ public class UploadImageActivity extends AppCompatActivity {
             mImageUri = data.getData();
 
             Picasso.get().load(mImageUri).into(mImageView);
+
         }
     }
 
@@ -132,11 +160,16 @@ public class UploadImageActivity extends AppCompatActivity {
 
                             Toast.makeText(UploadImageActivity.this, "Upload successful", Toast.LENGTH_LONG).show();
                             Upload upload = new Upload(mEditTextFileName.getText().toString().trim(),
-                                    taskSnapshot.getUploadSessionUri().toString());//problem?
-
+                                    taskSnapshot.getStorage().getDownloadUrl().toString());//problem?
 
                             String uploadId = mDatabaseRef.push().getKey();
                             mDatabaseRef.child(uploadId).setValue(upload);
+
+
+                            HashMap<String, Object> userMap = new HashMap<>();
+                            userMap.put("UserPic", taskSnapshot.getStorage().getDownloadUrl().toString());
+                            usersRef.child(currentUser.getUid()).updateChildren(userMap);
+
                         }
                     })
                     .addOnFailureListener(new OnFailureListener() {
@@ -156,5 +189,6 @@ public class UploadImageActivity extends AppCompatActivity {
             Toast.makeText(this, "No file selected", Toast.LENGTH_SHORT).show();
         }
     }
+
 
 }

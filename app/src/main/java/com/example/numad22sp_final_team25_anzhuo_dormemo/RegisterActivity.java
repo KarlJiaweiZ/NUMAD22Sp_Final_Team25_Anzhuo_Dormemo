@@ -34,7 +34,7 @@ public class RegisterActivity extends AppCompatActivity {
 
     private Button registerButton;
     private EditText userEmail, userPassword, userName, dormName;
-    private final String default_avatar = "https://firebasestorage.googleapis.com/v0/b/numad22sp-final-dormemo.appspot.com/o/images%2Fdefault_avatar.png?alt=media&token=a92b6a69-cc1d-46dc-8c3e-b98b1fa4682a";
+    private final String default_avatar = "gs://numad22sp-final-dormemo.appspot.com/images/default_avatar.png";
     private CheckBox dormLeaderCheck;
 
     private FirebaseAuth firebaseAuth;
