@@ -42,7 +42,7 @@ public class RegisterActivity extends AppCompatActivity {
 
     private ProgressBar progressBar;
 
-    private boolean registerStatus;
+    private boolean registerStatus = false;
     private boolean hasDorm;
     private boolean hasName;
 
@@ -62,26 +62,12 @@ public class RegisterActivity extends AppCompatActivity {
 
         initializeFields();
 
-//        dormLeaderCheck.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-//            @Override
-//            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-//                if(compoundButton.isChecked()){
-//                    dormName.setBackgroundColor(Color.GRAY);
-//                    dormName.setEnabled(false);
-//                }
-//                else {
-//                    dormName.setBackground(getResources().getDrawable(R.drawable.inputs));
-//                    dormName.setEnabled(true);
-//                }
-//            }
-//        });
-
         registerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 //createNewAccount();
                 checkInput();
-                if(registerStatus) sendRegisterToLoginActivity();
+                if (registerStatus) sendRegisterToLoginActivity();
             }
         });
     }
@@ -97,75 +83,80 @@ public class RegisterActivity extends AppCompatActivity {
         progressBar = (ProgressBar) findViewById(R.id.register_progressbar);
     }
 
-    private void createNewAccount(){
+    private void createNewAccount() {
         String email = userEmail.getText().toString();
         String password = userPassword.getText().toString();
         String username = userName.getText().toString();
         String dormname = dormName.getText().toString();
 
-        if(TextUtils.isEmpty(email)){
-            Toast.makeText(this, "Please enter email",Toast.LENGTH_SHORT).show();
-        }
-        else if(TextUtils.isEmpty(password)){
-            Toast.makeText(this, "Please enter password",Toast.LENGTH_SHORT).show();
-        }
-        else if(TextUtils.isEmpty(username)){
-            Toast.makeText(this, "Please enter username",Toast.LENGTH_SHORT).show();
-        }
-        else if(TextUtils.isEmpty(dormname)){
-            Toast.makeText(this, "Please enter dorm name",Toast.LENGTH_SHORT).show();
-        }
-        else if(hasName){
-            Toast.makeText(this, "User Name has been taken, please input another name",Toast.LENGTH_SHORT).show();
-            hasName = false;
-        }
-        else {
-            progressBar.setVisibility(View.VISIBLE);
-            firebaseAuth.createUserWithEmailAndPassword(email, password)
-                    .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                        @Override
-                        public void onComplete(@NonNull Task<AuthResult> task) {
-                            if(task.isSuccessful()){
-                                registerStatus = true;
-                                String currentUserID = firebaseAuth.getCurrentUser().getUid();
-                                //User Part
-                                databaseReference.child("Users").child(currentUserID).child("Email").setValue(email);
-                                databaseReference.child("Users").child(currentUserID).child("Password").setValue(password);
-                                databaseReference.child("Users").child(currentUserID).child("Username").setValue(username);
-                                databaseReference.child("Users").child(currentUserID).child("DormName").setValue(dormname);
-                                databaseReference.child("Users").child(currentUserID).child("UserPic").setValue("https://firebasestorage.googleapis.com/v0/b/numad22sp-final-dormemo.appspot.com/o/images%2Fdefault_avatar.png?alt=media&token=a92b6a69-cc1d-46dc-8c3e-b98b1fa4682a");
-                                //Dorm Part
-                                if(dormLeaderCheck.isChecked()){
-                                    //to be the leader
-                                    databaseReference.child("Dorms").child(dormname).child("Members").child("Leader").child(currentUserID).setValue(username);
-                                }else{
-                                    //to be a member
-                                    databaseReference.child("Dorms").child(dormname).child("Members").child("OtherMembers").child(currentUserID).setValue(username);
-                                }
-                                sendRegisterToMainActivity();
-                                Toast.makeText(RegisterActivity.this,"Account created successful", Toast.LENGTH_SHORT).show();
-                                progressBar.setVisibility(View.GONE);
+        progressBar.setVisibility(View.VISIBLE);
+        firebaseAuth.createUserWithEmailAndPassword(email, password)
+                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            registerStatus = true;
+                            String currentUserID = firebaseAuth.getCurrentUser().getUid();
+                            //User Part
+                            databaseReference.child("Users").child(currentUserID).child("Email").setValue(email);
+                            databaseReference.child("Users").child(currentUserID).child("Password").setValue(password);
+                            databaseReference.child("Users").child(currentUserID).child("Username").setValue(username);
+                            databaseReference.child("Users").child(currentUserID).child("DormName").setValue(dormname);
+                            databaseReference.child("Users").child(currentUserID).child("UserPic").setValue("gs://numad22sp-final-dormemo.appspot.com/images/default_avatar.png");
+                            //Dorm Part
+                            if (dormLeaderCheck.isChecked()) {
+                                //to be the leader
+                                databaseReference.child("Dorms").child(dormname).child("Members").child("Leader").child(currentUserID).setValue(username);
+                            } else {
+                                //to be a member
+                                databaseReference.child("Dorms").child(dormname).child("Members").child("OtherMembers").child(currentUserID).setValue(username);
                             }
-                            else {
-                                String message = task.getException().toString();
-                                Toast.makeText(RegisterActivity.this, message.substring(message.indexOf("[")), Toast.LENGTH_LONG).show();
-                                Log.e("Rigister failed", message);
-                                progressBar.setVisibility(View.GONE);
-                            }
+                            sendRegisterToMainActivity();
+                            Toast.makeText(RegisterActivity.this, "Account created successful", Toast.LENGTH_SHORT).show();
+                            progressBar.setVisibility(View.GONE);
+                        } else {
+                            String message = task.getException().toString();
+                            Toast.makeText(RegisterActivity.this, message.substring(message.indexOf("[")), Toast.LENGTH_SHORT).show();
+                            Log.e("Rigister failed", message);
+                            progressBar.setVisibility(View.GONE);
                         }
-                    });
-        }
+                    }
+                });
     }
 
-    private void checkInput(){
+    private void checkInput() {
+        String dormname = dormName.getText().toString();
+        String username = userName.getText().toString();
+        String password = userPassword.getText().toString();
+        String email = userEmail.getText().toString();
+
+        if (TextUtils.isEmpty(email)) {
+            Toast.makeText(this, "Please enter email", Toast.LENGTH_SHORT).show();
+        } else if (TextUtils.isEmpty(password)) {
+            Toast.makeText(this, "Please enter password", Toast.LENGTH_SHORT).show();
+        } else if (TextUtils.isEmpty(username)) {
+            Toast.makeText(this, "Please enter username", Toast.LENGTH_SHORT).show();
+        } else if (TextUtils.isEmpty(dormname)) {
+            Toast.makeText(this, "Please enter dorm name", Toast.LENGTH_SHORT).show();
+        } else if (dormname.length() > 15) {
+            Toast.makeText(RegisterActivity.this, "dorm name too long!", Toast.LENGTH_SHORT).show();
+        } else if (username.length() > 15) {
+            Toast.makeText(RegisterActivity.this, "user name too long!", Toast.LENGTH_SHORT).show();
+        } else if (password.length() < 6) {
+            Toast.makeText(RegisterActivity.this, "pass word too short!", Toast.LENGTH_SHORT).show();
+        } else
+            checkDormnameDup();
+    }
+
+    //check if the dorm name has already taken
+    private void checkDormnameDup() {
         DatabaseReference datacheck = databaseReference.child("Dorms");
         datacheck.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if(!snapshot.exists()){
+                if (!snapshot.exists()) {
                     createNewAccount();
-                }
-                else{
+                } else {
                     for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                         String dormname = dormName.getText().toString();
                         String temp_dormname = dataSnapshot.getKey().toString();
@@ -174,21 +165,24 @@ public class RegisterActivity extends AppCompatActivity {
                         }
                         //Log.e("Dorm:", temp_dormname);
                     }
-                    if(dormLeaderCheck.isChecked() && hasDorm){
+                    if (dormLeaderCheck.isChecked() && hasDorm) {
                         //notice user that this dorm name is taken
-                        Toast.makeText(RegisterActivity.this, "This dorm name has been taken, please rename.", Toast.LENGTH_LONG).show();
-                    }else if(dormLeaderCheck.isChecked() && !hasDorm){
+                        Toast.makeText(RegisterActivity.this, "This dorm name has been taken, please rename.", Toast.LENGTH_SHORT).show();
+                        hasDorm = false;
+                    } else if (dormLeaderCheck.isChecked() && !hasDorm) {
                         //create account as dorm leader
                         checkUsernameDup();
-                    }else if(!dormLeaderCheck.isChecked() && hasDorm){
+                    } else if (!dormLeaderCheck.isChecked() && hasDorm) {
                         //create account as dorm member
                         checkUsernameDup();
-                    }else{
+                    } else {
                         //notice user this dorm does not exist
-                        Toast.makeText(RegisterActivity.this, "Dorm does not exist, please enter a valid name or be the leader.", Toast.LENGTH_LONG).show();
+                        Toast.makeText(RegisterActivity.this, "Dorm does not exist, please enter a valid name or be the leader.", Toast.LENGTH_SHORT).show();
+                        hasDorm = false;
                     }
                 }
             }
+
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
 
@@ -196,22 +190,30 @@ public class RegisterActivity extends AppCompatActivity {
         });
     }
 
-    private void checkUsernameDup(){
+    //check whether user name has already taken
+    private void checkUsernameDup() {
         String username = userName.getText().toString();
         DatabaseReference existedUsers = databaseReference.child("Users");
         existedUsers.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for(DataSnapshot dataSnapshot : snapshot.getChildren()){
-                    if(username.equals(dataSnapshot.child("Username").getValue().toString())){
-                        hasName = true;
-                        Log.d("username",dataSnapshot.child("Username").getValue().toString());
-                    }
-                }
-                if(hasName){
-                    Toast.makeText(RegisterActivity.this, "User name has been taken, enter another one.", Toast.LENGTH_LONG).show();
-                }else{
+                if (!snapshot.exists()) {
                     createNewAccount();
+                } else {
+                    for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                        String tempName = dataSnapshot.child("Username").getValue().toString();
+                        if (username.equals(tempName)) {
+                            hasName = true;
+                        }
+                        Log.d("username", tempName);
+                        Log.d("username", String.valueOf(hasName));
+                    }
+                    if (hasName) {
+                        Toast.makeText(RegisterActivity.this, "User name has been taken, enter another one.", Toast.LENGTH_SHORT).show();
+                        hasName = false;
+                    } else {
+                        createNewAccount();
+                    }
                 }
             }
 
@@ -222,12 +224,12 @@ public class RegisterActivity extends AppCompatActivity {
         });
     }
 
-    private void sendRegisterToLoginActivity(){
+    private void sendRegisterToLoginActivity() {
         Intent loginIntent = new Intent(RegisterActivity.this, LoginActivity.class);
         startActivity(loginIntent);
     }
 
-    private void sendRegisterToMainActivity(){
+    private void sendRegisterToMainActivity() {
         Intent mainIntent = new Intent(RegisterActivity.this, MainActivity.class);
         mainIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(mainIntent);

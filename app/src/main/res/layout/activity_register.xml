@@ -67,7 +67,7 @@
                 android:layout_marginTop="10dp"
                 android:layout_marginRight="10dp"
                 android:background="@drawable/inputs"
-                android:hint="User Name"
+                android:hint="User Name (up to 15 characters)"
                 android:inputType="text"
                 android:padding="15dp"></EditText>
 
@@ -81,7 +81,7 @@
                 android:layout_marginTop="15dp"
                 android:layout_marginRight="10dp"
                 android:background="@drawable/inputs"
-                android:hint="Dorm Number"
+                android:hint="Dorm Name (up to 15 characters)"
                 android:inputType="text"
                 android:padding="15dp"></EditText>
 
