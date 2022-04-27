@@ -34,6 +34,7 @@ public class RegisterActivity extends AppCompatActivity {
 
     private Button registerButton;
     private EditText userEmail, userPassword, userName, dormName;
+    private final String default_avatar = "https://firebasestorage.googleapis.com/v0/b/numad22sp-final-dormemo.appspot.com/o/images%2Fdefault_avatar.png?alt=media&token=a92b6a69-cc1d-46dc-8c3e-b98b1fa4682a";
     private CheckBox dormLeaderCheck;
 
     private FirebaseAuth firebaseAuth;
@@ -133,6 +134,7 @@ public class RegisterActivity extends AppCompatActivity {
                                 databaseReference.child("Users").child(currentUserID).child("Password").setValue(password);
                                 databaseReference.child("Users").child(currentUserID).child("Username").setValue(username);
                                 databaseReference.child("Users").child(currentUserID).child("DormName").setValue(dormname);
+                                databaseReference.child("Users").child(currentUserID).child("UserPic").setValue(default_avatar);
                                 //Dorm Part
                                 if(dormLeaderCheck.isChecked()){
                                     //to be the leader

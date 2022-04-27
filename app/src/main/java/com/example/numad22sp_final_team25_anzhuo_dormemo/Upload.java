@@ -12,7 +12,6 @@ public class Upload {
         if (name.trim().equals("")) {
             name = "No Name";
         }
-
         mName = name;
         mImageUrl = imageUrl;
     }

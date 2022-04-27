@@ -16,22 +16,21 @@
             android:layout_height="wrap_content"
             tools:srcCompat="@tools:sample/avatars" />
 
+
         <TextView
             android:id="@+id/tvUserName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:gravity="center"
             android:text="UserName" />
-
-        <ImageView
-            android:id="@+id/ivUserStatus"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:srcCompat="@android:drawable/btn_radio" />
 
         <TextView
             android:id="@+id/tvUserStatus"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:gravity="center"
             android:text="User Status" />
 
         <View
@@ -44,6 +43,7 @@
             android:id="@+id/buttonChangePassword"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
             android:text="Change Password" />
 
         <Button

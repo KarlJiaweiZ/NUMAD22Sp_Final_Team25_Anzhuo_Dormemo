@@ -153,6 +153,8 @@ public class MeFragment extends Fragment {
                     String imageUri = snapshot.child("UserPic").getValue().toString();
                     Picasso.get().load(imageUri).into(userPicIV);
 
+
+
                 } else {
                     Log.d("MeFragment", "retrieveUserInfo: userRef wrong!");
                 }
