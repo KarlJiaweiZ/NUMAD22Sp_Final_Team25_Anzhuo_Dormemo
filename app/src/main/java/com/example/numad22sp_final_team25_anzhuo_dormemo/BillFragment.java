@@ -124,7 +124,10 @@ public class BillFragment extends Fragment {
                         String desc = dataSnapshot.child("desc").getValue(String.class);
                         String uid = dataSnapshot.child("uid").getValue(String.class);
                         boolean isChecked = dataSnapshot.child("isChecked").getValue(boolean.class);
-                        addBillLocal(payer, amount, payee, desc, uid, isChecked);
+                        if(isChecked)
+                            addBillLocal(cardList.size(), payer, amount, payee, desc, uid, isChecked);
+                        else
+                            addBillLocal(0, payer, amount, payee, desc, uid, isChecked);
                     }
                 }
             }
@@ -134,44 +137,6 @@ public class BillFragment extends Fragment {
 
             }
         });
-
-//        dormRef.child(currentDormName).child("bills").addChildEventListener(new ChildEventListener() {
-//            @Override
-//            public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-//                if(snapshot.exists()){
-//                    cardList.clear();
-//                    adapter.notifyDataSetChanged();
-//                    Iterator iterator = snapshot.getChildren().iterator();
-//                    String amount = (String) ((DataSnapshot)iterator.next()).getValue();
-//                    String desc = (String) ((DataSnapshot)iterator.next()).getValue();
-//                    boolean isChecked = (boolean) ((DataSnapshot)iterator.next()).getValue();
-//                    String payee = (String) ((DataSnapshot)iterator.next()).getValue();
-//                    String payer = (String) ((DataSnapshot)iterator.next()).getValue();
-//                    String uid = (String) ((DataSnapshot)iterator.next()).getValue();
-//                    addBillLocal(payer, amount, payee, desc, uid, isChecked);
-//                }
-//            }
-//
-//            @Override
-//            public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-//
-//            }
-//
-//            @Override
-//            public void onChildRemoved(@NonNull DataSnapshot snapshot) {
-//
-//            }
-//
-//            @Override
-//            public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-//
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError error) {
-//
-//            }
-//        });
 
         //part3. touch helper (minor task)
 //        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
@@ -254,35 +219,6 @@ public class BillFragment extends Fragment {
         createRview();
     }
 
-
-    //    private void initialItemData(Bundle savedInstanceState) {
-//
-//        // Not the first time to open this Activity, Extract data from saved instance state
-//        if (savedInstanceState != null && savedInstanceState.containsKey(NUMBER_OF_ITEMS)) {
-//            if (cardList == null || cardList.size() == 0) {
-//
-//                int size = savedInstanceState.getInt(NUMBER_OF_ITEMS);
-//
-//                // Retrieve keys we stored in the instance
-//                for (int i = 0; i < size; i++) {
-//                    Integer imgId = savedInstanceState.getInt(KEY_OF_INSTANCE + i + "0");
-//                    String itemName = savedInstanceState.getString(KEY_OF_INSTANCE + i + "1");
-//                    String itemDesc = savedInstanceState.getString(KEY_OF_INSTANCE + i + "2");
-//                    boolean isChecked = savedInstanceState.getBoolean(KEY_OF_INSTANCE + i + "3");
-//
-//                    // We need to make sure names such as "XXX(checked)" will not duplicate
-//                    // Use a tricky way to solve this problem, not the best though
-//                    if (isChecked) {
-//                        itemName = itemName.substring(0, itemName.lastIndexOf("("));
-//                    }
-//                    BillCard billCard = new BillCard(imgId, itemName, itemDesc, isChecked);
-//
-//                    cardList.add(billCard);
-//                }
-//            }
-//        }
-//
-//    }
     private void createRview() {
         recyclerView = billFragView.findViewById(R.id.bill_recycler_view);
         recyclerView.setHasFixedSize(true);
@@ -299,7 +235,9 @@ public class BillFragment extends Fragment {
             public void onCheckBoxClick(int position) {
                 BillCard billCard = cardList.get(position);
                 billCard.onCheckBoxClick(position);
-                adapter.notifyItemChanged(position);
+                cardList.remove(billCard);
+                cardList.add(cardList.size(), billCard);
+                adapter.notifyDataSetChanged();
                 String billId = billCard.getUid();
                 dormRef.child(currentDormName).child("bills").child(billId).child("isChecked").setValue(billCard.isChecked());
             }
@@ -387,10 +325,10 @@ public class BillFragment extends Fragment {
         dormBillKeyRef.updateChildren(billInfo);
     }
 
-    private void addBillLocal(String payer, String amount, String payee, String desc, String uid, boolean isChecked){
+    private void addBillLocal(int position, String payer, String amount, String payee, String desc, String uid, boolean isChecked){
         BillCard billCard = new BillCard("Payer: " + payer, payee, "Desc: " + desc, "$"+amount, uid,isChecked);
-        cardList.add(0, billCard);
-        adapter.notifyItemChanged(0);
+        cardList.add(position, billCard);
+        adapter.notifyItemChanged(position);
     }
 
 }
