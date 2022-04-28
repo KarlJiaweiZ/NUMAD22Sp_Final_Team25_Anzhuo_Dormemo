@@ -42,7 +42,6 @@ tools:context=".ChangeDormNameActivity">
         android:layout_marginRight="10dp"
         android:background="@drawable/inputs"
         android:hint="New Dorm Name"
-        android:inputType="textPassword"
         android:padding="20dp"></EditText>
 
 

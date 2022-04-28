@@ -1,17 +1,24 @@
 package com.example.numad22sp_final_team25_anzhuo_dormemo;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.HashMap;
 
@@ -71,7 +78,26 @@ public class ChangeDormNameActivity extends AppCompatActivity {
         HashMap<String, Object> userMap = new HashMap<>();
         userMap.put("DormName", newDormName);
         usersRef.child(currentUser.getUid()).updateChildren(userMap);
-        dormsRef.child(oldDormName).setValue(newDormName);
+        copyRecord(dormsRef.child(oldDormName), dormsRef.child(newDormName));
 
+    }
+
+    private void copyRecord(DatabaseReference fromPath, final DatabaseReference toPath) {
+        fromPath.addListenerForSingleValueEvent(new ValueEventListener()  {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                toPath.setValue(dataSnapshot.getValue()).addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        Log.d("ChangeDormNameActivity", "Copy Record Success!");
+                        dormsRef.child(oldDormName).removeValue();
+                    }
+                });
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.d("ChangeDormNameActivity", "Copy Record on cancelled");
+            }
+        });
     }
 }
