@@ -18,8 +18,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
-        android:layout_marginEnd="34dp"
-        android:layout_marginBottom="34dp"
+        android:layout_marginEnd="60dp"
+        android:layout_marginBottom="50dp"
         android:clickable="true"
         android:src="@android:drawable/ic_input_add" />
 

@@ -61,6 +61,8 @@ public class BillRviewAdapter extends RecyclerView.Adapter<BillRviewHolder>{
         //only payer can set bill as settled
         if(holder.billName.getText().toString().equals("Payer: "+currentUserName)){
             holder.checkBox.setEnabled(true);
+        }else{
+            holder.checkBox.setEnabled(false);
         }
         holder.checkBox.setChecked(currentCard.isChecked());
         if(currentCard.isChecked()){
