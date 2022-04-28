@@ -77,33 +77,33 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }
             });
-            verifyUserExistance();
+            //verifyUserExistance();
         }
 
     }
 
-    private void verifyUserExistance() {
-        String currentUserID = firebaseAuth.getCurrentUser().getUid();
-        /*
-        databaseReference.child("Users").child(currentUserID).addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if(snapshot.child("Username").exists()){
-                    Toast.makeText(MainActivity.this,"Welcome back", Toast.LENGTH_SHORT).show();
-                }
-                else{
-
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
-         */
-
-    }
+//    private void verifyUserExistance() {
+//        String currentUserID = firebaseAuth.getCurrentUser().getUid();
+//        /*
+//        databaseReference.child("Users").child(currentUserID).addValueEventListener(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                if(snapshot.child("Username").exists()){
+//                    Toast.makeText(MainActivity.this,"Welcome back", Toast.LENGTH_SHORT).show();
+//                }
+//                else{
+//
+//                }
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError error) {
+//
+//            }
+//        });
+//         */
+//
+//    }
 
     private void SendUserToLoginActivity() {
         Intent loginIntent = new Intent(MainActivity.this, LoginActivity.class);

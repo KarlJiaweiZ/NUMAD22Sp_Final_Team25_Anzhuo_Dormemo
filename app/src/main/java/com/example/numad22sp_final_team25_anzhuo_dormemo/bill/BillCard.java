@@ -31,7 +31,7 @@ public class BillCard implements BillCardClickListener{
     }
 
     public String getBillFee() {
-        return billFee + (isChecked?"(Payed)":"");
+        return billFee;
     }
 
     public boolean isChecked() {
