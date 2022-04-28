@@ -15,13 +15,10 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
@@ -33,8 +30,6 @@ import com.google.firebase.storage.StorageTask;
 import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
 
-import java.util.HashMap;
-
 
 public class UploadImageActivity extends AppCompatActivity {
 
@@ -43,7 +38,6 @@ public class UploadImageActivity extends AppCompatActivity {
     private Button mButtonChooseImage;
     private Button mButtonUpload;
     private Button mButtonCancel;
-    private EditText mEditTextFileName;
     private ImageView mImageView;
     private ProgressBar mProgressBar;
 
@@ -74,7 +68,6 @@ public class UploadImageActivity extends AppCompatActivity {
         mButtonChooseImage = findViewById(R.id.button_choose_image);
         mButtonUpload = findViewById(R.id.button_upload);
         mButtonCancel = findViewById(R.id.button_upload_cancel);
-        mEditTextFileName = findViewById(R.id.edit_text_file_name);
         mImageView = findViewById(R.id.image_view);
         mProgressBar = findViewById(R.id.progress_bar);
 
@@ -161,19 +154,31 @@ public class UploadImageActivity extends AppCompatActivity {
                             }, 500);
 
                             Toast.makeText(UploadImageActivity.this, "Upload successful", Toast.LENGTH_LONG).show();
-                            Upload upload = new Upload(mEditTextFileName.getText().toString().trim(),
-                                    taskSnapshot.getStorage().getDownloadUrl().toString());//problem?
 
-                            String uploadId = mDatabaseRef.push().getKey();
-                            mDatabaseRef.child(uploadId).setValue(upload);
-                            if(upload.getImageUrl().isEmpty()) {
-                                Log.d("uploadImageActivity", "url is empty!!!!!!");
-                            }
+                            fileReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                @Override
+                                public void onSuccess(Uri uri) {
 
-                            //HashMap<String, Object> userMap = new HashMap<>();
-                            //userMap.put("UserPic", upload.getImageUrl());
-                            //usersRef.child(currentUser.getUid()).updateChildren(userMap);
-                            usersRef.child(currentUser.getUid()).child("UserPic").setValue(upload.getImageUrl());
+                                    Upload upload = new Upload(uri.toString());//problem?
+
+                                    String uploadId = mDatabaseRef.push().getKey();
+                                    mDatabaseRef.child(uploadId).setValue(upload);
+
+                                    //HashMap<String, Object> userMap = new HashMap<>();
+                                    //userMap.put("UserPic", upload.getImageUrl());
+                                    //usersRef.child(currentUser.getUid()).updateChildren(userMap);
+                                    usersRef.child(currentUser.getUid()).child("UserPic").setValue(upload.getImageUri());
+                                    sendUserToMainActivity();
+                                }
+                            }).addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    Toast.makeText(UploadImageActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                                    Log.d("UploadImageActivity", "upload task: get uri failure");
+                                }
+                            });
+
+
 
                         }
                     })

@@ -153,21 +153,8 @@ public class MeFragment extends Fragment {
                     //currentPass = snapshot.child("Password").getValue().toString();
                     String retrieveUsername = snapshot.child("Username").getValue().toString();
                     currentUserNameTV.setText(retrieveUsername);
-                    String gsUrl = snapshot.child("UserPic").getValue().toString();
-                    StorageReference gsReference = FirebaseStorage.getInstance().getReferenceFromUrl(gsUrl);
-                    final Uri[] downloadUri = new Uri[1];
-                    gsReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                        @Override
-                        public void onSuccess(Uri uri) {
-                            downloadUri[0] = uri;
-                            Picasso.get().load(downloadUri[0]).into(userPicIV);
-                        }
-                    }).addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            Log.d("MeFragment", "download uri wrong");
-                        }
-                    });
+                    String Url = snapshot.child("UserPic").getValue().toString();
+                    Picasso.get().load(Url).into(userPicIV);
 
                 } else {
                     Log.d("MeFragment", "retrieveUserInfo: userRef wrong!");
