@@ -8,6 +8,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.SimpleItemAnimator;
@@ -23,7 +24,10 @@ import com.example.numad22sp_final_team25_anzhuo_dormemo.bill.BillCard;
 import com.example.numad22sp_final_team25_anzhuo_dormemo.bill.BillCardClickListener;
 import com.example.numad22sp_final_team25_anzhuo_dormemo.bill.BillRviewAdapter;
 import com.example.numad22sp_final_team25_anzhuo_dormemo.bill.FetchData;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
@@ -48,9 +52,6 @@ public class BillFragment extends Fragment {
     private ArrayList<BillCard> cardList = new ArrayList<>();
 
     private FloatingActionButton addBillButton;
-
-    private static final String KEY_OF_INSTANCE = "KEY_OF_INSTANCE";
-    private static final String NUMBER_OF_ITEMS = "NUMBER_OF_ITEMS";
 
     //firebase component
     private String currentUserID, currentUserName, currentDormName, currentDate, currentTime;
@@ -139,18 +140,29 @@ public class BillFragment extends Fragment {
         });
 
         //part3. touch helper (minor task)
-//        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
-//            @Override
-//            public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
-//                return false;
-//            }
-//
-//            @Override
-//            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
-//                int position = viewHolder.getLayoutPosition();
-//                BillCard card = adapter.getItem(position);
-//                cardList.remove(position);
-//                adapter.notifyItemChanged(position);
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
+            @Override
+            public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+                return false;
+            }
+
+            @Override
+            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+                int position = viewHolder.getLayoutPosition();
+                BillCard card = adapter.getItem(position);
+                dormRef.child("bills").child(card.getUid()).removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if(task.isSuccessful()){
+                            Toast.makeText(billFragView.getContext(), "Bill Deleted", Toast.LENGTH_SHORT).show();
+                        }else{
+                            Toast.makeText(billFragView.getContext(), "Remove Failed", Toast.LENGTH_SHORT).show();
+
+                        }
+                    }
+                });
+                cardList.remove(position);
+                adapter.notifyDataSetChanged();
 //                Snackbar.make(billFragView.findViewById(R.id.bill_recycler_view), "Bill Deleted", Snackbar.LENGTH_LONG)
 //                        .setAction("Undo", new View.OnClickListener() {
 //                            @Override
@@ -159,9 +171,9 @@ public class BillFragment extends Fragment {
 //                                adapter.notifyItemChanged(position);
 //                            }
 //                        }).show();
-//            }
-//        });
-//        itemTouchHelper.attachToRecyclerView(recyclerView);
+            }
+        });
+        itemTouchHelper.attachToRecyclerView(recyclerView);
 
 
         return billFragView;
