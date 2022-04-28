@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.View;
 import android.webkit.MimeTypeMap;
 import android.widget.Button;
@@ -17,8 +18,10 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
@@ -39,7 +42,7 @@ public class UploadImageActivity extends AppCompatActivity {
 
     private Button mButtonChooseImage;
     private Button mButtonUpload;
-    private TextView mTextViewShowUploads;
+    private Button mButtonCancel;
     private EditText mEditTextFileName;
     private ImageView mImageView;
     private ProgressBar mProgressBar;
@@ -70,7 +73,7 @@ public class UploadImageActivity extends AppCompatActivity {
 
         mButtonChooseImage = findViewById(R.id.button_choose_image);
         mButtonUpload = findViewById(R.id.button_upload);
-        mTextViewShowUploads = findViewById(R.id.text_view_show_uploads);
+        mButtonCancel = findViewById(R.id.button_upload_cancel);
         mEditTextFileName = findViewById(R.id.edit_text_file_name);
         mImageView = findViewById(R.id.image_view);
         mProgressBar = findViewById(R.id.progress_bar);
@@ -92,17 +95,18 @@ public class UploadImageActivity extends AppCompatActivity {
                     Toast.makeText(UploadImageActivity.this, "Upload in progress", Toast.LENGTH_SHORT).show();
                 } else {
                     uploadFile();
-                    sendUserToMainActivity();
+
                 }
             }
         });
 
-        mTextViewShowUploads.setOnClickListener(new View.OnClickListener() {
+        mButtonCancel.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-
+            public void onClick(View view) {
+                sendUserToMainActivity();
             }
         });
+
     }
 
     private void SendUserToLoginActivity() {
@@ -129,9 +133,7 @@ public class UploadImageActivity extends AppCompatActivity {
         if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK
                 && data != null && data.getData() != null) {
             mImageUri = data.getData();
-
             Picasso.get().load(mImageUri).into(mImageView);
-
         }
     }
 
@@ -164,11 +166,14 @@ public class UploadImageActivity extends AppCompatActivity {
 
                             String uploadId = mDatabaseRef.push().getKey();
                             mDatabaseRef.child(uploadId).setValue(upload);
+                            if(upload.getImageUrl().isEmpty()) {
+                                Log.d("uploadImageActivity", "url is empty!!!!!!");
+                            }
 
-
-                            HashMap<String, Object> userMap = new HashMap<>();
-                            userMap.put("UserPic", taskSnapshot.getStorage().getDownloadUrl().toString());
-                            usersRef.child(currentUser.getUid()).updateChildren(userMap);
+                            //HashMap<String, Object> userMap = new HashMap<>();
+                            //userMap.put("UserPic", upload.getImageUrl());
+                            //usersRef.child(currentUser.getUid()).updateChildren(userMap);
+                            usersRef.child(currentUser.getUid()).child("UserPic").setValue(upload.getImageUrl());
 
                         }
                     })
@@ -176,6 +181,7 @@ public class UploadImageActivity extends AppCompatActivity {
                         @Override
                         public void onFailure(@NonNull Exception e) {
                             Toast.makeText(UploadImageActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                            Log.d("UploadImageActivity", "upload task failure");
                         }
                     })
                     .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {

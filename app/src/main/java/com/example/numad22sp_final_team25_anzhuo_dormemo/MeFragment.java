@@ -44,7 +44,7 @@ public class MeFragment extends Fragment {
     private static final int PICK_IMAGE_REQUEST = 1;
 
     private View meFragmentView;
-    private String currentEmail;
+    private String currentEmail, currentDormName;
 
     private ImageView userPicIV;
     private TextView userStatusTV;
@@ -56,8 +56,6 @@ public class MeFragment extends Fragment {
     private FirebaseUser currentUser;
     private FirebaseAuth firebaseAuth;
     private DatabaseReference usersRef;
-    private StorageReference storageReference;
-
 
     public MeFragment() {
         // Required empty public constructor
@@ -82,6 +80,7 @@ public class MeFragment extends Fragment {
         Intent uploadIntent = new Intent(getActivity(), UploadImageActivity.class);
         startActivity(uploadIntent);
     }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -128,7 +127,9 @@ public class MeFragment extends Fragment {
         changeDormNameButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                Intent intent = new Intent(getContext(), ChangeDormNameActivity.class);
+                intent.putExtra("EXTRA_oldDormName", currentDormName);
+                startActivity(intent);
             }
         });
 
@@ -148,6 +149,7 @@ public class MeFragment extends Fragment {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if(snapshot.exists() && snapshot.hasChild("Username")){
                     currentEmail = snapshot.child("Email").getValue().toString();
+                    currentDormName = snapshot.child("DormName").getValue().toString();
                     //currentPass = snapshot.child("Password").getValue().toString();
                     String retrieveUsername = snapshot.child("Username").getValue().toString();
                     currentUserNameTV.setText(retrieveUsername);
@@ -157,7 +159,6 @@ public class MeFragment extends Fragment {
                     gsReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                         @Override
                         public void onSuccess(Uri uri) {
-                            // Got the download URL for 'users/me/profile.png'
                             downloadUri[0] = uri;
                             Picasso.get().load(downloadUri[0]).into(userPicIV);
                         }
@@ -167,7 +168,6 @@ public class MeFragment extends Fragment {
                             Log.d("MeFragment", "download uri wrong");
                         }
                     });
-
 
                 } else {
                     Log.d("MeFragment", "retrieveUserInfo: userRef wrong!");
