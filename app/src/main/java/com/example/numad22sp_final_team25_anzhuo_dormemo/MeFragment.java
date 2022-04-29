@@ -50,7 +50,7 @@ public class MeFragment extends Fragment {
     private TextView userStatusTV;
     private TextView currentUserNameTV;
     private Button changePasswordButton;
-    private Button changeDormNameButton;
+    //private Button changeDormNameButton;
     private Button logOutButton;
 
     private FirebaseUser currentUser;
@@ -113,22 +113,20 @@ public class MeFragment extends Fragment {
             }
         });
         currentUserNameTV = (TextView) meFragmentView.findViewById(R.id.tvUserName);
+        userStatusTV = (TextView) meFragmentView.findViewById(R.id.tvUserStatus);
+        userStatusTV.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getContext(), ChangeUserStatusActivity.class);
+                startActivity(intent);
+            }
+        });
         changePasswordButton = (Button) meFragmentView.findViewById(R.id.buttonChangePassword);
         changePasswordButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(getContext(), ChangePasswordActivity.class);
                 intent.putExtra("EXTRA_current_Email", currentEmail);
-                startActivity(intent);
-            }
-        });
-
-        changeDormNameButton = (Button) meFragmentView.findViewById(R.id.buttonChangeDormName);
-        changeDormNameButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getContext(), ChangeDormNameActivity.class);
-                intent.putExtra("EXTRA_oldDormName", currentDormName);
                 startActivity(intent);
             }
         });
@@ -149,10 +147,15 @@ public class MeFragment extends Fragment {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if(snapshot.exists() && snapshot.hasChild("Username")){
                     currentEmail = snapshot.child("Email").getValue().toString();
-                    currentDormName = snapshot.child("DormName").getValue().toString();
-                    //currentPass = snapshot.child("Password").getValue().toString();
                     String retrieveUsername = snapshot.child("Username").getValue().toString();
                     currentUserNameTV.setText(retrieveUsername);
+                    if (snapshot.hasChild("Status")) {
+                        String retrieveUserStatus = snapshot.child("Status").getValue().toString();
+                        userStatusTV.setText(retrieveUserStatus);
+                    } else {
+                        userStatusTV.setText("User Status");
+                    }
+
                     String Url = snapshot.child("UserPic").getValue().toString();
                     Picasso.get().load(Url).into(userPicIV);
 

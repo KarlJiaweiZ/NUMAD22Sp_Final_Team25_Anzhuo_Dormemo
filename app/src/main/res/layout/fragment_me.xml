@@ -65,12 +65,6 @@
             android:text="Change Password" />
 
         <Button
-            android:id="@+id/buttonChangeDormName"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Change Dorm Name" />
-
-        <Button
             android:id="@+id/buttonLogOut"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

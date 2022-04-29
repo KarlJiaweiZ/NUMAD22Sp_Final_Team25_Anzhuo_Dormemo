@@ -12,7 +12,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.NUMAD22Sp_Final_Team25_Anzhuo_Dormemo">
         <activity
-            android:name=".ChangeDormNameActivity"
+            android:name=".ChangeUserStatusActivity"
             android:exported="false" />
         <activity
             android:name=".UploadImageActivity"
@@ -31,7 +31,7 @@
             android:exported="false" />
         <activity
             android:name=".MainActivity"
-            android:exported="true"></activity>
+            android:exported="true" />
         <activity
             android:name=".LaunchActivity"
             android:exported="true">
