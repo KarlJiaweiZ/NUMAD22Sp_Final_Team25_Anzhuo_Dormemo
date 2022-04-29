@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -29,6 +30,8 @@ public class ChangeDormNameActivity extends AppCompatActivity {
     private FirebaseAuth firebaseAuth;
     private DatabaseReference usersRef, dormsRef;
     private String oldDormName;
+    private Boolean hasDorm = false;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,7 +55,6 @@ public class ChangeDormNameActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 mUpdateDormName(etNewDormName.getText().toString());
-                sendUserToMainActivity();
             }
         });
         button_cancel = (Button) findViewById(R.id.change_dorm_name_cancel_button);
@@ -75,10 +77,17 @@ public class ChangeDormNameActivity extends AppCompatActivity {
     }
 
     private void mUpdateDormName(String newDormName) {
-        HashMap<String, Object> userMap = new HashMap<>();
-        userMap.put("DormName", newDormName);
-        usersRef.child(currentUser.getUid()).updateChildren(userMap);
-        copyRecord(dormsRef.child(oldDormName), dormsRef.child(newDormName));
+        isDormNameDup(newDormName);
+        if (hasDorm) {
+            Toast.makeText(ChangeDormNameActivity.this,"Dorm Name exists", Toast.LENGTH_SHORT);
+        } else {
+            HashMap<String, Object> userMap = new HashMap<>();
+            userMap.put("DormName", newDormName);
+            usersRef.child(currentUser.getUid()).updateChildren(userMap);
+            copyRecord(dormsRef.child(oldDormName), dormsRef.child(newDormName));
+            sendUserToMainActivity();
+        }
+
 
     }
 
@@ -97,6 +106,31 @@ public class ChangeDormNameActivity extends AppCompatActivity {
             @Override
             public void onCancelled(DatabaseError databaseError) {
                 Log.d("ChangeDormNameActivity", "Copy Record on cancelled");
+            }
+        });
+    }
+
+    //check if the dorm name has already taken
+    private void isDormNameDup(String newDormName) {
+
+        dormsRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (!snapshot.exists()) {
+                    hasDorm = false;
+                } else {
+                    for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                        String temp_dormname = dataSnapshot.getKey().toString();
+                        if (temp_dormname.equals(newDormName)) {
+                            hasDorm = true;
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
             }
         });
     }
