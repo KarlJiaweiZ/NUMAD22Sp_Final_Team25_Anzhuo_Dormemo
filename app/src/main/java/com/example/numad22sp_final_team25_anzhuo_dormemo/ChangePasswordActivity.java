@@ -56,8 +56,6 @@ public class ChangePasswordActivity extends AppCompatActivity {
                 sendUserToMainActivity();
             }
         });
-
-
     }
 
     private void mUpdatePassword(String oldPass, String newPass) {

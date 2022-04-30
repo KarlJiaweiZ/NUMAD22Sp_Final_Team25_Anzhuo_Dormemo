@@ -3,6 +3,7 @@ package com.example.numad22sp_final_team25_anzhuo_dormemo;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -19,6 +20,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.EmailAuthProvider;
@@ -41,20 +44,18 @@ public class MeFragment extends Fragment {
     private static final int PICK_IMAGE_REQUEST = 1;
 
     private View meFragmentView;
-    private String currentUserID, currentUserName, currentDormName, currentEmail;
+    private String currentEmail, currentDormName;
 
     private ImageView userPicIV;
     private TextView userStatusTV;
     private TextView currentUserNameTV;
     private Button changePasswordButton;
-    private Button changeDormNameButton;
+    //private Button changeDormNameButton;
     private Button logOutButton;
 
     private FirebaseUser currentUser;
     private FirebaseAuth firebaseAuth;
-    private DatabaseReference usersRef, dormRef, groupMessageKeyRef;
-    private StorageReference storageReference;
-
+    private DatabaseReference usersRef;
 
     public MeFragment() {
         // Required empty public constructor
@@ -80,6 +81,7 @@ public class MeFragment extends Fragment {
         startActivity(uploadIntent);
     }
 
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -93,12 +95,10 @@ public class MeFragment extends Fragment {
             SendUserToLoginActivity();
         }
         usersRef = FirebaseDatabase.getInstance().getReference().child("Users");
-        dormRef = FirebaseDatabase.getInstance().getReference().child("Dorms");
 
         if(currentUser == null){
             SendUserToLoginActivity();
         }
-
         initializeFields();
         retrieveUserInfo();
         return meFragmentView;
@@ -113,6 +113,14 @@ public class MeFragment extends Fragment {
             }
         });
         currentUserNameTV = (TextView) meFragmentView.findViewById(R.id.tvUserName);
+        userStatusTV = (TextView) meFragmentView.findViewById(R.id.tvUserStatus);
+        userStatusTV.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getContext(), ChangeUserStatusActivity.class);
+                startActivity(intent);
+            }
+        });
         changePasswordButton = (Button) meFragmentView.findViewById(R.id.buttonChangePassword);
         changePasswordButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -120,14 +128,6 @@ public class MeFragment extends Fragment {
                 Intent intent = new Intent(getContext(), ChangePasswordActivity.class);
                 intent.putExtra("EXTRA_current_Email", currentEmail);
                 startActivity(intent);
-            }
-        });
-
-        changeDormNameButton = (Button) meFragmentView.findViewById(R.id.buttonChangeDormName);
-        changeDormNameButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
             }
         });
 
@@ -147,11 +147,17 @@ public class MeFragment extends Fragment {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if(snapshot.exists() && snapshot.hasChild("Username")){
                     currentEmail = snapshot.child("Email").getValue().toString();
-                    //currentPass = snapshot.child("Password").getValue().toString();
                     String retrieveUsername = snapshot.child("Username").getValue().toString();
                     currentUserNameTV.setText(retrieveUsername);
-                    String imageUri = snapshot.child("UserPic").getValue().toString();
-                    Picasso.get().load(imageUri).into(userPicIV);
+                    if (snapshot.hasChild("Status")) {
+                        String retrieveUserStatus = snapshot.child("Status").getValue().toString();
+                        userStatusTV.setText(retrieveUserStatus);
+                    } else {
+                        userStatusTV.setText("User Status");
+                    }
+
+                    String Url = snapshot.child("UserPic").getValue().toString();
+                    Picasso.get().load(Url).into(userPicIV);
 
                 } else {
                     Log.d("MeFragment", "retrieveUserInfo: userRef wrong!");
@@ -165,5 +171,6 @@ public class MeFragment extends Fragment {
         });
 
     }
+
 
 }

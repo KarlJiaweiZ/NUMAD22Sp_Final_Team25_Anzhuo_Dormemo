@@ -1,35 +1,21 @@
 package com.example.numad22sp_final_team25_anzhuo_dormemo;
 
 public class Upload {
-    private String mName;
-    private String mImageUrl;
+    private String mImageUri;
 
     public Upload() {
         //empty constructor needed
     }
 
-    public Upload(String name, String imageUrl) {
-        if (name.trim().equals("")) {
-            name = "No Name";
-        }
-
-        mName = name;
-        mImageUrl = imageUrl;
+    public Upload(String imageUri) {
+        mImageUri = imageUri;
     }
 
-    public String getName() {
-        return mName;
+    public String getImageUri() {
+        return mImageUri;
     }
 
-    public void setName(String name) {
-        mName = name;
-    }
-
-    public String getImageUrl() {
-        return mImageUrl;
-    }
-
-    public void setImageUrl(String imageUrl) {
-        mImageUrl = imageUrl;
+    public void setImageUri(String imageUri) {
+        mImageUri = imageUri;
     }
 }

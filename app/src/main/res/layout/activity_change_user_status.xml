@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".UploadImageActivity">
+    tools:context=".ChangeUserStatusActivity">
 
     <LinearLayout
         android:layout_width="409dp"
@@ -16,7 +16,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <ImageView
-            android:id="@+id/upload_image_logo"
+            android:id="@+id/ChangeUserStatus_logo"
             android:layout_width="match_parent"
             android:layout_height="150dp"
             android:layout_alignParentStart="true"
@@ -25,47 +25,27 @@
             android:scaleType="fitCenter"
             android:src="@drawable/dormemo_logo_foreground"></ImageView>
 
-        <Button
-            android:id="@+id/button_choose_image"
+        <TextView
+            android:id="@+id/change_user_status_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="150dp"
 
-            android:text="Choose file" />
+            android:text="Change User Status" />
 
-        <androidx.cardview.widget.CardView
-            android:layout_width="155dp"
-            android:layout_height="155dp"
-            app:cardCornerRadius="250dp"
-            app:cardBackgroundColor="@color/white"
-            android:layout_gravity="center_horizontal">
-
-            <androidx.cardview.widget.CardView
-                android:layout_width="150dp"
-                android:layout_height="150dp"
-                app:cardCornerRadius="250dp"
-                android:layout_gravity="center">
-
-                <ImageView
-                    android:id="@+id/image_view"
-                    android:layout_width="150dp"
-                    android:layout_height="150dp"
-                    android:layout_above="@id/progress_bar"
-                    android:layout_marginTop="16dp"
-                    android:gravity="center"/>
-
-
-            </androidx.cardview.widget.CardView>
-
-        </androidx.cardview.widget.CardView>
-
-        <ProgressBar
-            android:id="@+id/progress_bar"
-            style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+        <EditText
+            android:id="@+id/new_status"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_above="@+id/button_upload"
+            android:layout_below="@id/login_email"
             android:layout_alignParentStart="true"
-            android:layout_marginBottom="16dp" />
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginRight="10dp"
+            android:background="@drawable/inputs"
+            android:hint="New Status"
+            android:padding="20dp"></EditText>
+
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -74,26 +54,24 @@
             android:layout_marginTop="20dp">
 
             <Button
-                android:id="@+id/button_upload"
+                android:id="@+id/change_status_yes_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@color/defaultColor"
                 android:layout_marginLeft="30dp"
                 android:layout_marginRight="20dp"
                 android:layout_weight="1"
-                android:text="Upload" />
+                android:text="Yes" />
 
             <Button
-                android:id="@+id/button_upload_cancel"
+                android:id="@+id/change_status_cancel_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@color/defaultColor"
-                android:layout_marginLeft="30dp"
-                android:layout_marginRight="20dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="30dp"
                 android:layout_weight="1"
                 android:text="Cancel" />
-
-
         </LinearLayout>
 
     </LinearLayout>
