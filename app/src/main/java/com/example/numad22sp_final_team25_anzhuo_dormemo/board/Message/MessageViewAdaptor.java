@@ -121,6 +121,17 @@ public class MessageViewAdaptor extends RecyclerView.Adapter<MessageViewHolder> 
                 context.startActivity(commentsIntent);
             }
         });
+
+        holder.commentText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // start CommentsActivity
+                Intent commentsIntent = new Intent(context, CommentsActivity.class);
+                commentsIntent.putExtra("postKey", mid);
+                commentsIntent.putExtra("dormName", currentItem.dormName);
+                context.startActivity(commentsIntent);
+            }
+        });
     }
 
     @Override

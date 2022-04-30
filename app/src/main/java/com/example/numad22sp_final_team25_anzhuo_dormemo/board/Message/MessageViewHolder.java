@@ -19,6 +19,7 @@ public class MessageViewHolder extends RecyclerView.ViewHolder {
     public ImageButton likeButton;
     public ImageButton commentButton;
     public TextView likeCountText;
+    public TextView commentText;
 //    public int countLike;
     public String currentUserID;
 
@@ -29,6 +30,7 @@ public class MessageViewHolder extends RecyclerView.ViewHolder {
         likeButton = mView.findViewById(R.id.like_button);
         commentButton = mView.findViewById(R.id.comment_button);
         likeCountText = mView.findViewById(R.id.number_of_likes);
+        commentText = mView.findViewById(R.id.ans_text);
 
         currentUserID = FirebaseAuth.getInstance().getCurrentUser().getUid();
     }
