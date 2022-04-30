@@ -215,6 +215,7 @@ public class BoardFragment extends Fragment {
             public void onComplete(@NonNull Task task) {
                 if (task.isSuccessful()) {
                     Toast.makeText(getActivity(),"Message added successfully",Toast.LENGTH_LONG).show();
+                    displayMessagesFrame(rootView);
                 } else {
                     Toast.makeText(getActivity(), Objects.requireNonNull(task.getException()).toString(),Toast.LENGTH_LONG).show();
                 }
