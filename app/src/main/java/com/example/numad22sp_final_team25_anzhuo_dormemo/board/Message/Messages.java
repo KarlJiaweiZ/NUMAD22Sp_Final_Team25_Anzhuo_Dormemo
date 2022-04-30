@@ -1,12 +1,13 @@
 package com.example.numad22sp_final_team25_anzhuo_dormemo.board.Message;
 
+import com.example.numad22sp_final_team25_anzhuo_dormemo.board.Comment.Comments;
+
 import java.util.HashMap;
 
 public class Messages {
     public String message;
     public String username;
     public String uid;
-    public String profilePicture;
     public String time;
     public String date;
     public String dormName;
@@ -16,7 +17,7 @@ public class Messages {
     public Messages() {
     }
 
-    public Messages(String message, String username, String uid, String profilePicture, String time, String date, String dormName, String priority) {
+    public Messages(String message, String username, String uid, String time, String date, String dormName, String priority) {
         this.message = message;
         this.username = username;
         this.uid = uid;

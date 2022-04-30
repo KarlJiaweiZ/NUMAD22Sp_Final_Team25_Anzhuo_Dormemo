@@ -8,11 +8,13 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.numad22sp_final_team25_anzhuo_dormemo.CommentsActivity;
 import com.example.numad22sp_final_team25_anzhuo_dormemo.R;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -48,6 +50,18 @@ public class MessageViewAdaptor extends RecyclerView.Adapter<MessageViewHolder> 
         String mid = postIDs.get(position);
         Messages currentItem = messagesHashmap.get(mid);
         holder.setMessage(currentItem.message);
+
+        FirebaseDatabase.getInstance().getReference().child("Dorms").child(currentItem.dormName).child("Messages").child(mid).child("Comments").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                holder.setCommentCount(snapshot.getChildrenCount());
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
 
         DatabaseReference likeReference = FirebaseDatabase.getInstance().getReference().child("Dorms").child(currentItem.dormName).child("Messages").child(mid).child("likes");
         Context context = this.context;

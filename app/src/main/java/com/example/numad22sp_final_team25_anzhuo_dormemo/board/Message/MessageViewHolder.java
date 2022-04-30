@@ -30,7 +30,7 @@ public class MessageViewHolder extends RecyclerView.ViewHolder {
         likeButton = mView.findViewById(R.id.like_button);
         commentButton = mView.findViewById(R.id.comment_button);
         likeCountText = mView.findViewById(R.id.number_of_likes);
-        commentText = mView.findViewById(R.id.ans_text);
+        commentText = mView.findViewById(R.id.message_comment_text);
 
         currentUserID = FirebaseAuth.getInstance().getCurrentUser().getUid();
     }
@@ -61,6 +61,11 @@ public class MessageViewHolder extends RecyclerView.ViewHolder {
     public void setDate(String date) {
         TextView tv = mView.findViewById(R.id.post_date);
         tv.setText(date);
+    }
+
+    public void setCommentCount(long count) {
+        TextView tv = mView.findViewById(R.id.message_comment_text);
+        tv.setText("Comments (" + count + ")");
     }
 
     public void setPriorityIcon(Context context, String priority) {
