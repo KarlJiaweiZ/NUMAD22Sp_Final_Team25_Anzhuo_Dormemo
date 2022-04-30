@@ -141,7 +141,7 @@ public class CommentsActivity extends AppCompatActivity {
             public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
                 Comments newComment = snapshot.getValue(Comments.class);
                 commentRecords.put(snapshot.getKey(), newComment);
-                commentViewAdaptor.notifyItemInserted(0);
+                commentViewAdaptor.notifyDataSetChanged();
             }
 
             @Override
