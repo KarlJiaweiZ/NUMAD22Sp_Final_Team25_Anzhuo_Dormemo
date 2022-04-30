@@ -8,17 +8,18 @@
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_marginTop="10dp"
-        ></de.hdodenhof.circleimageview.CircleImageView>
+        android:layout_marginStart="10dp"></de.hdodenhof.circleimageview.CircleImageView>
 
     <TextView
         android:id="@+id/receiver_id_info"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="sender id info"
         android:layout_alignParentTop="true"
         android:layout_marginTop="10dp"
+        android:layout_toEndOf="@id/chat_message_profile_image"
+        android:text="sender id info"
         android:textSize="10sp"
-        android:layout_toEndOf="@id/chat_message_profile_image"></TextView>
+        android:layout_marginStart="5dp"></TextView>
     <TextView
         android:id="@+id/receiver_status_info"
         android:layout_width="wrap_content"
@@ -28,45 +29,51 @@
         android:textSize="10sp"
         android:layout_marginStart="8sp"
         android:text="sender statues info"></TextView>
+
     <TextView
         android:id="@+id/receiver_message_text"
-        android:layout_height="wrap_content"
         android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_below="@id/receiver_id_info"
         android:layout_toEndOf="@id/chat_message_profile_image"
         android:background="@drawable/chat_messages_layout"
-        android:text="receiver message here"
         android:padding="10dp"
+        android:text="receiver message here"
         android:textSize="14sp"
-        android:textStyle="bold"></TextView>
+        android:textStyle="bold"
+        android:layout_marginStart="5dp"></TextView>
+
     <TextView
         android:id="@+id/receiver_datetime"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_toEndOf="@id/chat_message_profile_image"
-        android:textSize="8sp"
         android:layout_below="@id/receiver_message_text"
-        android:text="Date and Time"></TextView>
+        android:layout_toEndOf="@id/chat_message_profile_image"
+        android:text="Date and Time"
+        android:textSize="8sp"
+        android:layout_marginStart="5dp"></TextView>
 
     <TextView
         android:id="@+id/sender_message_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentTop="@id/receiver_message_text"
         android:layout_alignParentEnd="true"
         android:layout_marginTop="10dp"
-        android:layout_alignParentTop="@id/receiver_message_text"
         android:background="@drawable/chat_send_messages_layout"
-        android:text="sender message here"
         android:padding="10dp"
+        android:text="sender message here"
         android:textSize="14sp"
         android:textStyle="bold"
-        ></TextView>
+        android:layout_marginEnd="10dp"></TextView>
+
     <TextView
         android:id="@+id/sender_datetime"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:textSize="8sp"
         android:layout_below="@id/sender_message_text"
-        android:text="Date and Time"></TextView>
+        android:layout_alignParentEnd="true"
+        android:text="Date and Time"
+        android:textSize="8sp"
+        android:layout_marginEnd="10dp"></TextView>
 </RelativeLayout>
