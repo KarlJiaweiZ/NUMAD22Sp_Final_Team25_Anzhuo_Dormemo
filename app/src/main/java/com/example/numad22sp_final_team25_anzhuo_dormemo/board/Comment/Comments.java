@@ -5,16 +5,15 @@ public class Comments {
     public String comment;
     public String date;
     public String time;
-    public String profileImage;
     public String username;
 
     public Comments() {}
 
-    public Comments(String uid, String comment, String date, String time, String profileImage, String username) {
+    public Comments(String uid, String comment, String date, String time, String username) {
         this.uid = uid;
         this.comment = comment;
         this.date = date;
         this.time = time;
-        this.profileImage = profileImage;
+        this.username = username;
     }
 }

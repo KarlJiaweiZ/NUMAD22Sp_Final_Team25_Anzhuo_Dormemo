@@ -9,9 +9,15 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.numad22sp_final_team25_anzhuo_dormemo.R;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class CommentViewAdaptor extends RecyclerView.Adapter<CommentViewHolder> {
@@ -32,14 +38,31 @@ public class CommentViewAdaptor extends RecyclerView.Adapter<CommentViewHolder> 
 
     @Override
     public void onBindViewHolder(@NonNull CommentViewHolder holder, int position) {
-        List<String> postIDs = commentsHashMap.keySet().stream().sorted().collect(Collectors.toList());
+        List<String> postIDs = new ArrayList<>(commentsHashMap.keySet());
         String cid = postIDs.get(position);
         Comments currentItem = commentsHashMap.get(cid);
         holder.setComment(currentItem.comment);
         holder.setTime(currentItem.time);
         holder.setDate(currentItem.date);
         holder.setUsername(currentItem.username);
-        holder.setProfileImage(this.context, currentItem.profileImage);
+
+        final String[] profilePictureMessageOwner = new String[1];
+
+        // update users profilePicture
+        FirebaseDatabase.getInstance().getReference().child("Users").child(currentItem.uid).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+                    profilePictureMessageOwner[0] = Objects.requireNonNull(snapshot.child("UserPic").getValue()).toString();
+                }
+                holder.setProfileImage(context, profilePictureMessageOwner[0]);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
     }
 
     @Override

@@ -40,7 +40,7 @@ public class CommentsActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private DatabaseReference userReference;
     private DatabaseReference messageReference;
-    private HashMap<String, Comments> commentRecords;
+    private HashMap<String, Comments> commentRecords = new HashMap<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,7 +53,7 @@ public class CommentsActivity extends AppCompatActivity {
         // get dormName from intent
         dormName = getIntent().getExtras().get("dormName").toString();
 
-        commentRecords = new HashMap<>();
+        commentRecords.clear();
 
         mAuth = FirebaseAuth.getInstance();
         currentUserID = mAuth.getCurrentUser().getUid();
@@ -86,12 +86,6 @@ public class CommentsActivity extends AppCompatActivity {
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         if (snapshot.exists()) {
                             String username = snapshot.child("Username").getValue().toString();
-                            String profileImage;
-                            try {
-                                profileImage = snapshot.child("UserPic").getValue().toString();
-                            } catch (java.lang.NullPointerException e) {
-                                profileImage = "https://firebasestorage.googleapis.com/v0/b/numad22sp-final-dormemo.appspot.com/o/images%2Fdefault_avatar.png?alt=media&token=a92b6a69-cc1d-46dc-8c3e-b98b1fa4682a";
-                            }
 
                             String commentText = commentInputText.getText().toString();
                             if (TextUtils.isEmpty(commentText)) {
@@ -108,7 +102,6 @@ public class CommentsActivity extends AppCompatActivity {
                                 hashmap.put("date", currentDate);
                                 hashmap.put("time", currentTime);
                                 hashmap.put("username", username);
-                                hashmap.put("profileImage", profileImage);
 
                                 messageReference.child("Comments").child(postCommentKey).updateChildren(hashmap).addOnCompleteListener(new OnCompleteListener() {
                                     @Override
