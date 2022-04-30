@@ -7,6 +7,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
@@ -102,11 +103,13 @@ public class LoginActivity extends AppCompatActivity {
                         public void onComplete(@NonNull Task<AuthResult> task) {
                             if (task.isSuccessful()) {
                                 sendUserToMainActivity();
-                                Toast.makeText(LoginActivity.this, "Login successful", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(LoginActivity.this, "Login successful", Toast.LENGTH_LONG).show();
                                 progressBar.setVisibility(View.GONE);
                             } else {
                                 String message = task.getException().toString();
-                                Toast.makeText(LoginActivity.this, "Error" + message, Toast.LENGTH_SHORT).show();
+                                String message1 = message.substring(message.indexOf(':'), message.length());
+                                Log.d("login failed", message1);
+                                Toast.makeText(LoginActivity.this, message1, Toast.LENGTH_LONG).show();
                                 progressBar.setVisibility(View.GONE);
                             }
                         }
