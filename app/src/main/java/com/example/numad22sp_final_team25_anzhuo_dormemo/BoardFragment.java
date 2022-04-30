@@ -19,6 +19,7 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.numad22sp_final_team25_anzhuo_dormemo.board.Message.MessageViewAdaptor;
@@ -39,6 +40,8 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Objects;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class BoardFragment extends Fragment {
     private FirebaseAuth mAuth;
@@ -168,6 +171,24 @@ public class BoardFragment extends Fragment {
 
         // get text content
         EditText newMessage = rootView.findViewById(R.id.add_question_txt);
+
+        // back
+        TextView back = rootView.findViewById(R.id.add_question_back);
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                displayMessagesFrame(rootView);
+            }
+        });
+
+        // back button
+        CircleImageView back_button = rootView.findViewById(R.id.add_question_back_button);
+        back_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                displayMessagesFrame(rootView);
+            }
+        });
 
         // get priority
         AutoCompleteTextView priority = rootView.findViewById(R.id.message_priority);
