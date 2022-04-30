@@ -11,29 +11,13 @@
         android:orientation="vertical">
 
 
-        <androidx.cardview.widget.CardView
-            android:layout_width="155dp"
-            android:layout_height="155dp"
-            app:cardCornerRadius="250dp"
-            app:cardBackgroundColor="@color/white"
-            android:layout_gravity="center_horizontal">
-
-            <androidx.cardview.widget.CardView
-                android:layout_width="150dp"
-                android:layout_height="150dp"
-                app:cardCornerRadius="250dp"
-                android:layout_gravity="center">
-
-                <ImageView
-                    android:id="@+id/ivUserPic"
-                    android:layout_width="150dp"
-                    android:layout_height="150dp"
-                    android:gravity="center"
-                    tools:srcCompat="@tools:sample/avatars" />
-
-            </androidx.cardview.widget.CardView>
-
-        </androidx.cardview.widget.CardView>
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/ivUserPic"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:layout_gravity="center"
+            android:src="@drawable/message_profile_icon"
+            android:layout_marginLeft="4dp"/>
 
         <TextView
             android:id="@+id/tvUserName"
