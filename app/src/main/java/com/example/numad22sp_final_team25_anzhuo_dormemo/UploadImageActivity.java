@@ -30,26 +30,23 @@ import com.google.firebase.storage.StorageTask;
 import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
 
+import java.io.File;
+
 
 public class UploadImageActivity extends AppCompatActivity {
 
     private static final int PICK_IMAGE_REQUEST = 1;
-
     private Button mButtonChooseImage;
     private Button mButtonUpload;
     private Button mButtonCancel;
     private ImageView mImageView;
     private ProgressBar mProgressBar;
-
     private Uri mImageUri;
-
     private StorageReference mStorageRef;
     private DatabaseReference mDatabaseRef;
-
     private FirebaseUser currentUser;
     private FirebaseAuth firebaseAuth;
     private DatabaseReference usersRef;
-
     private StorageTask mUploadTask;
 
     @Override
@@ -88,7 +85,6 @@ public class UploadImageActivity extends AppCompatActivity {
                     Toast.makeText(UploadImageActivity.this, "Upload in progress", Toast.LENGTH_SHORT).show();
                 } else {
                     uploadFile();
-
                 }
             }
         });
@@ -158,15 +154,9 @@ public class UploadImageActivity extends AppCompatActivity {
                             fileReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                                 @Override
                                 public void onSuccess(Uri uri) {
-
                                     Upload upload = new Upload(uri.toString());//problem?
-
                                     String uploadId = mDatabaseRef.push().getKey();
                                     mDatabaseRef.child(uploadId).setValue(upload);
-
-                                    //HashMap<String, Object> userMap = new HashMap<>();
-                                    //userMap.put("UserPic", upload.getImageUrl());
-                                    //usersRef.child(currentUser.getUid()).updateChildren(userMap);
                                     usersRef.child(currentUser.getUid()).child("UserPic").setValue(upload.getImageUri());
                                     sendUserToMainActivity();
                                 }
@@ -177,9 +167,6 @@ public class UploadImageActivity extends AppCompatActivity {
                                     Log.d("UploadImageActivity", "upload task: get uri failure");
                                 }
                             });
-
-
-
                         }
                     })
                     .addOnFailureListener(new OnFailureListener() {
@@ -200,6 +187,4 @@ public class UploadImageActivity extends AppCompatActivity {
             Toast.makeText(this, "No file selected", Toast.LENGTH_SHORT).show();
         }
     }
-
-
 }
