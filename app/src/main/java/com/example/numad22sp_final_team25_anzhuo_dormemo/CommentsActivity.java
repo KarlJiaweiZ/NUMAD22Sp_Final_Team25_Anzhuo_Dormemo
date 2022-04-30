@@ -13,8 +13,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.numad22sp_final_team25_anzhuo_dormemo.Board.Comment.CommentViewAdaptor;
-import com.example.numad22sp_final_team25_anzhuo_dormemo.Board.Comment.Comments;
+import com.example.numad22sp_final_team25_anzhuo_dormemo.board.Comment.CommentViewAdaptor;
+import com.example.numad22sp_final_team25_anzhuo_dormemo.board.Comment.Comments;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -141,7 +141,7 @@ public class CommentsActivity extends AppCompatActivity {
             public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
                 Comments newComment = snapshot.getValue(Comments.class);
                 commentRecords.put(snapshot.getKey(), newComment);
-                commentViewAdaptor.notifyItemInserted(0);
+                commentViewAdaptor.notifyDataSetChanged();
             }
 
             @Override
