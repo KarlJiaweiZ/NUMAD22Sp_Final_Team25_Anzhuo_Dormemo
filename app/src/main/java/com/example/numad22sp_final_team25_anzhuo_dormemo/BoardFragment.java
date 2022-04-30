@@ -80,9 +80,6 @@ public class BoardFragment extends Fragment {
                     case R.id.badd:
                         displayAddMessageFrame(rootView);
                         break;
-                    case R.id.bsearch:
-                        displaySearchMessageFrame(rootView);
-                        break;
                 }
                 return true;
             }
@@ -198,11 +195,6 @@ public class BoardFragment extends Fragment {
                         .show();
             }
         });
-    }
-
-    private void displaySearchMessageFrame(View rootView) {
-        rootView.findViewById(R.id.search_message_layout).bringToFront();
-
     }
 
     private void addNewMessage(String newMessage, String priority) {

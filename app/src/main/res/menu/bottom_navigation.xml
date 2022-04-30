@@ -9,8 +9,4 @@
         android:id="@+id/badd"
         android:icon="@drawable/message_add_message_icon"
         android:title="Add Message"/>
-    <item
-        android:id="@+id/bsearch"
-        android:icon="@drawable/message_search_icon"
-        android:title="Search"/>
 </menu>

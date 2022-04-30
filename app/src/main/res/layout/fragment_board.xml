@@ -76,63 +76,8 @@
                 android:textColor="#000000" />
 
         </LinearLayout>
-
-        <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-            xmlns:app="http://schemas.android.com/apk/res-auto"
-            xmlns:tools="http://schemas.android.com/tools"
-            android:id="@+id/search_message_layout"
-            android:layout_width="match_parent"
-            android:background="@color/white"
-            android:layout_height="match_parent"
-            tools:context=".FindFriend"
-            android:fitsSystemWindows="true">
-            <RelativeLayout
-                android:id="@+id/myLayout"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
-
-                <EditText
-                    android:id="@+id/search_friend"
-                    android:layout_width="315dp"
-                    android:layout_height="54dp"
-                    android:layout_marginTop="5dp"
-                    android:ems="10"
-                    android:hint="Enter the message to search"
-                    android:paddingLeft="7dp"
-                    android:paddingTop="7dp"
-                    android:paddingBottom="7dp" />
-
-                <ImageButton
-                    android:id="@+id/search_button"
-                    android:layout_width="match_parent"
-                    android:layout_height="54dp"
-                    android:layout_alignParentEnd="true"
-                    android:layout_alignParentRight="true"
-                    android:layout_marginStart="5dp"
-                    android:layout_marginLeft="5dp"
-                    android:layout_marginTop="5dp"
-                    android:layout_toEndOf="@+id/search_friend"
-                    android:layout_toRightOf="@+id/search_friend"
-                    android:paddingLeft="5dp"
-                    android:paddingTop="7dp"
-                    android:paddingBottom="7dp"
-                    android:src="@drawable/message_search_icon" />
-
-
-            </RelativeLayout>
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/search_list"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_alignParentLeft="true"
-                android:layout_margin="10dp"
-                android:layout_below="@+id/myLayout">
-            </androidx.recyclerview.widget.RecyclerView>
-
-
-        </RelativeLayout>
     </FrameLayout>
+
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_navigation"
         android:layout_width="match_parent"
@@ -142,4 +87,5 @@
         app:itemIconTint="#000000"
         app:itemTextColor="#000000"
         app:menu="@menu/bottom_navigation" />
+
 </RelativeLayout>
