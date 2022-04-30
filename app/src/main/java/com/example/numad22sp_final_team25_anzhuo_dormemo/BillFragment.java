@@ -139,41 +139,41 @@ public class BillFragment extends Fragment {
             }
         });
 
-        //part3. touch helper (minor task)
-        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
-            @Override
-            public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
-                return false;
-            }
-
-            @Override
-            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
-                int position = viewHolder.getLayoutPosition();
-                BillCard card = adapter.getItem(position);
-                dormRef.child("bills").child(card.getUid()).removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        if(task.isSuccessful()){
-                            Toast.makeText(billFragView.getContext(), "Bill Deleted", Toast.LENGTH_SHORT).show();
-                        }else{
-                            Toast.makeText(billFragView.getContext(), "Remove Failed", Toast.LENGTH_SHORT).show();
-
-                        }
-                    }
-                });
-                cardList.remove(position);
-                adapter.notifyDataSetChanged();
-//                Snackbar.make(billFragView.findViewById(R.id.bill_recycler_view), "Bill Deleted", Snackbar.LENGTH_LONG)
-//                        .setAction("Undo", new View.OnClickListener() {
-//                            @Override
-//                            public void onClick(View view) {
-//                                cardList.add(position, card);
-//                                adapter.notifyItemChanged(position);
-//                            }
-//                        }).show();
-            }
-        });
-        itemTouchHelper.attachToRecyclerView(recyclerView);
+//        //part3. touch helper (minor task)
+//        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
+//            @Override
+//            public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+//                return false;
+//            }
+//
+//            @Override
+//            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+//                int position = viewHolder.getLayoutPosition();
+//                BillCard card = adapter.getItem(position);
+//                dormRef.child("bills").child(card.getUid()).removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
+//                    @Override
+//                    public void onComplete(@NonNull Task<Void> task) {
+//                        if(task.isSuccessful()){
+//                            Toast.makeText(billFragView.getContext(), "Bill Deleted", Toast.LENGTH_SHORT).show();
+//                        }else{
+//                            Toast.makeText(billFragView.getContext(), "Remove Failed", Toast.LENGTH_SHORT).show();
+//
+//                        }
+//                    }
+//                });
+//                cardList.remove(position);
+//                adapter.notifyDataSetChanged();
+////                Snackbar.make(billFragView.findViewById(R.id.bill_recycler_view), "Bill Deleted", Snackbar.LENGTH_LONG)
+////                        .setAction("Undo", new View.OnClickListener() {
+////                            @Override
+////                            public void onClick(View view) {
+////                                cardList.add(position, card);
+////                                adapter.notifyItemChanged(position);
+////                            }
+////                        }).show();
+//            }
+//        });
+//        itemTouchHelper.attachToRecyclerView(recyclerView);
 
 
         return billFragView;
