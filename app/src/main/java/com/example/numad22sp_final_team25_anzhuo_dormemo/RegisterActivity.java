@@ -167,7 +167,7 @@ public class RegisterActivity extends AppCompatActivity {
                     }
                     if (dormLeaderCheck.isChecked() && hasDorm) {
                         //notice user that this dorm name is taken
-                        Toast.makeText(RegisterActivity.this, "This dorm name has been taken, please rename.", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(RegisterActivity.this, "This dorm name has been taken, please rename;\nIf you would like to be a member of this dorm, please uncheck.", Toast.LENGTH_SHORT).show();
                         hasDorm = false;
                     } else if (dormLeaderCheck.isChecked() && !hasDorm) {
                         //create account as dorm leader
