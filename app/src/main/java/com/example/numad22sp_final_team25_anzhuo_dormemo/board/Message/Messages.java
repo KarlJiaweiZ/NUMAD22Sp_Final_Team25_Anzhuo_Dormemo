@@ -20,10 +20,6 @@ public class Messages {
         this.message = message;
         this.username = username;
         this.uid = uid;
-        if (profilePicture == null || profilePicture.isEmpty()) {
-            profilePicture = "https://firebasestorage.googleapis.com/v0/b/numad22sp-final-dormemo.appspot.com/o/images%2Fdefault_avatar.png?alt=media&token=a92b6a69-cc1d-46dc-8c3e-b98b1fa4682a";
-        }
-        this.profilePicture = profilePicture;
         this.time = time;
         this.date = date;
         this.likes = new HashMap<>();

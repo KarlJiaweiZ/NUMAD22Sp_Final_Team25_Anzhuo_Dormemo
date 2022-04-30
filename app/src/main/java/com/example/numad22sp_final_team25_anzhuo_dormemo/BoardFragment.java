@@ -47,10 +47,9 @@ public class BoardFragment extends Fragment {
     private String currentUserID;
     private String currentDormName;
     private String currentUsername;
-    private String currentUserProfileImage = "https://firebasestorage.googleapis.com/v0/b/numad22sp-final-dormemo.appspot.com/o/images%2Fdefault_avatar.png?alt=media&token=a92b6a69-cc1d-46dc-8c3e-b98b1fa4682a";
     private MessageViewAdaptor messageViewAdaptor;
     private RecyclerView messageRecyclerView;
-    private HashMap<String, Messages> messageRecords;
+    private HashMap<String, Messages> messageRecords = new HashMap<>();
     private View rootView;
 
     public BoardFragment() {
@@ -93,7 +92,6 @@ public class BoardFragment extends Fragment {
         super.onResume();
 
         // default: display messages
-        init();
         displayMessagesFrame(rootView);
 
         // create dropdown menu
@@ -108,26 +106,21 @@ public class BoardFragment extends Fragment {
     }
 
     private void init() {
-        messageRecords = new HashMap<>();
+//        messageRecords = new HashMap<>();
+        messageRecords.clear();
         dbReference.getReference().child("Users").child(currentUserID).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()) {
                     currentDormName = Objects.requireNonNull(snapshot.child("DormName").getValue()).toString();
                     currentUsername = Objects.requireNonNull(snapshot.child("Username").getValue()).toString();
-                    try {
-                        currentUserProfileImage = Objects.requireNonNull(snapshot.child("UserPic").getValue()).toString();
-                    } catch (java.lang.NullPointerException e) {
-                        currentUserProfileImage = "https://firebasestorage.googleapis.com/v0/b/numad22sp-final-dormemo.appspot.com/o/images%2Fdefault_avatar.png?alt=media&token=a92b6a69-cc1d-46dc-8c3e-b98b1fa4682a";
-                    }
                     messageReference = dbReference.getReference().child("Dorms").child(currentDormName).child("Messages");
                     messageReference.addChildEventListener(new ChildEventListener() {
                         @Override
                         public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
                             Messages newMessage = snapshot.getValue(Messages.class);
-                            newMessage.uid = currentUserID; // record current userId;
                             messageRecords.put(snapshot.getKey(), newMessage);
-                            messageViewAdaptor.notifyItemInserted(0);
+                            messageViewAdaptor.notifyDataSetChanged();
                         }
 
                         @Override
@@ -156,6 +149,8 @@ public class BoardFragment extends Fragment {
     }
 
     private void displayMessagesFrame(View rootView) {
+        init();
+
         messageRecyclerView = rootView.findViewById(R.id.all_que_list);
         messageRecyclerView.bringToFront();
 
@@ -209,7 +204,6 @@ public class BoardFragment extends Fragment {
         hashmap.put("message", newMessage);
         hashmap.put("username", currentUsername);
         hashmap.put("uid", currentUserID);
-        hashmap.put("profilePicture", currentUserProfileImage);
         hashmap.put("date", getCurrentDate());
         hashmap.put("time", getCurrentTime());
         hashmap.put("dormName", currentDormName);
