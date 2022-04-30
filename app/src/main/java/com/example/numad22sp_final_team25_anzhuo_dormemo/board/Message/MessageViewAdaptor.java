@@ -1,4 +1,4 @@
-package com.example.numad22sp_final_team25_anzhuo_dormemo.Board.Message;
+package com.example.numad22sp_final_team25_anzhuo_dormemo.board.Message;
 
 import android.annotation.SuppressLint;
 import android.content.Context;

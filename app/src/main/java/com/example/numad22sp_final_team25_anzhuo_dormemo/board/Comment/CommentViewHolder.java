@@ -1,4 +1,4 @@
-package com.example.numad22sp_final_team25_anzhuo_dormemo.Board.Comment;
+package com.example.numad22sp_final_team25_anzhuo_dormemo.board.Comment;
 
 import android.content.Context;
 import android.view.View;

@@ -1,4 +1,4 @@
-package com.example.numad22sp_final_team25_anzhuo_dormemo.Board.Message;
+package com.example.numad22sp_final_team25_anzhuo_dormemo.board.Message;
 
 import android.content.Context;
 import android.view.View;
@@ -11,8 +11,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.numad22sp_final_team25_anzhuo_dormemo.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.squareup.picasso.Picasso;
-
-import java.io.File;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 

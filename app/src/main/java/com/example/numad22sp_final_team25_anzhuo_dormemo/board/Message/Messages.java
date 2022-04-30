@@ -1,6 +1,5 @@
-package com.example.numad22sp_final_team25_anzhuo_dormemo.Board.Message;
+package com.example.numad22sp_final_team25_anzhuo_dormemo.board.Message;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Messages {
@@ -16,7 +15,6 @@ public class Messages {
 
     public Messages() {
     }
-
 
     public Messages(String message, String username, String uid, String profilePicture, String time, String date, String dormName, String priority) {
         this.message = message;

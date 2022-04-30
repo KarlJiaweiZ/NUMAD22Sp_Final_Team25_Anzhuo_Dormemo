@@ -21,8 +21,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.example.numad22sp_final_team25_anzhuo_dormemo.Board.Message.MessageViewAdaptor;
-import com.example.numad22sp_final_team25_anzhuo_dormemo.Board.Message.Messages;
+import com.example.numad22sp_final_team25_anzhuo_dormemo.board.Message.MessageViewAdaptor;
+import com.example.numad22sp_final_team25_anzhuo_dormemo.board.Message.Messages;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -125,6 +125,7 @@ public class BoardFragment extends Fragment {
                         @Override
                         public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
                             Messages newMessage = snapshot.getValue(Messages.class);
+                            newMessage.uid = currentUserID; // record current userId;
                             messageRecords.put(snapshot.getKey(), newMessage);
                             messageViewAdaptor.notifyItemInserted(0);
                         }
